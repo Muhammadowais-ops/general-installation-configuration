@@ -80,6 +80,4 @@ kubeadm config images pull
 kubectl get nodes -o wide
 kubectl cluster-info
 
-
-
-
+kubectl get componentstatuses
