@@ -81,3 +81,13 @@ kubectl get nodes -o wide
 kubectl cluster-info
 
 kubectl get componentstatuses
+
+
+
+vim /etc/crictl.yaml
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+
+
+
+crictl image ls
