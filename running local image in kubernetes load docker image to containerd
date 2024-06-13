@@ -1,0 +1,57 @@
+######## FIRST WE NEED DOCKERFILE #####################
+
+after that commands need to run
+
+
+docker build -t test:V1 .
+docker save -o test:v1.img test
+ctr -n=k8s.io images import test:v1.img
+crictl image ls
+IMAGE                                     TAG                 IMAGE ID            SIZE
+docker.io/library/test                    V1                  898167040b3b2       934MB
+
+
+cat service-registry-test-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: eureka-server1
+  name: eureka-server1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-server1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: eureka-server1
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: test:V1
+        name: eureka-server1
+        env:
+        - name: TZ
+          value: "America/Chicago"
+          # command: ["java"]
+        args:
+          - bash
+          - -c
+          - |
+            java -jar s-*.jar
+        imagePullPolicy: Never
+        workingDir: /service-registry/
+        ports:
+        - containerPort: 8761
+
+
+
+kubectl get po
+NAME                              READY   STATUS    RESTARTS   AGE
+eureka-server1-5db95d78b5-wlh2m   1/1     Running   0          3s
+
+
