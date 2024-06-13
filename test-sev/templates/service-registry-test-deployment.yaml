@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.eurekatest.depname }}
+  name: {{ .Values.eurekatest.depname }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.eurekatest.depname }}
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.eurekatest.depname }}
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: {{ .Values.eurekatest.image.name }}:{{ .Values.eurekatest.image.tag }}
+        name: eureka-server1
+        env:
+        - name: {{ .Values.eurekatest.env.name }}
+          value: {{ quote .Values.eurekatest.env.value }}
+          # command: ["java"]
+        args:
+          - bash
+          - -c
+          - |
+            java -jar service-registry-*.jar
+        imagePullPolicy: Never
+        workingDir: /service-registry/
+        ports:
+        - containerPort: {{ .Values.eurekatest.port }}

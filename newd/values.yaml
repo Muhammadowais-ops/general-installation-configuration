@@ -1,0 +1,23 @@
+eurekatest:
+  image:
+    name: test-sev
+    tag: v1
+  imagePullPolicy: Never
+  depname: eureka-server1  # Assuming this refers to a deployment name
+  env:
+    name: TZ
+    value: America/Chicago
+  port: 8761
+
+
+
+services:
+- name: eureka-server1
+  port: 8761
+  targetPort: 8761
+  nodePort: 30007
+- name: server1
+  port: 8611
+  targetPort: 8611
+  nodePort: 30008
+

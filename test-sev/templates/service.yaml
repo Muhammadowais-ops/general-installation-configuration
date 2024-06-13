@@ -1,0 +1,35 @@
+{{- range .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ .name }}  # Use service name for selector (better practice)
+  ports:
+  - port: {{ .port }}
+    targetPort: {{ .targetPort }}
+    nodePort: {{ .nodePort }}  # Assuming nodePort is provided in values.yaml
+---
+{{ end }}
+
+
+
+#{{- range $service := .Values.services }}
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: {{ $service.name }}
+#spec:
+#  type: NodePort
+#  selector:
+#    app: {{ $service.name }}  # Use service name for selector (better practice)
+#  ports:
+#  - port: {{ $service.port }}
+#    targetPort: {{ $service.targetPort }}
+#    nodePort: {{ $service.nodePort }}  # Assuming nodePort is provided in values.yaml
+#---
+#{{ end }}
+
+
