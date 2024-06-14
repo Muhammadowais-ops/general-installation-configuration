@@ -1,0 +1,8 @@
+---
+releases: 
+  - name: new
+    chart: ./new
+    installed: true
+  - name: testing
+    chart: ./testing
+    installed: true
