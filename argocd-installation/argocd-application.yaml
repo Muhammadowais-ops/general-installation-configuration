@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-testing
+spec:
+  destination:
+    name: ''
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: argocd-example
+    repoURL: 'https://github.com/Muhammadowais-ops/kubernetes-and-helm.git'
+    targetRevision: HEAD
+    directory:
+      jsonnet:
+        tlas: []
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
