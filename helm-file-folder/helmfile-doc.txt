@@ -1,0 +1,8 @@
+#######  helmfile download link #######
+https://github.com/helmfile/helmfile/releases
+
+
+### to use helmfile below are the commands ##########3
+
+helmfile sync -f helmfile-install.yaml
+helmfile sync -f helmfile-uninstall.yaml 
