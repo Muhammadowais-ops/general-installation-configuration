@@ -22,4 +22,15 @@ rm -rf argocd-linux-amd64
 argocd admin initial-password -n argocd
 
 
+### configure argocd cli access ########
+
+
+argocd login localhost:30443  ######### localhost nodePort or url
+
+
+argocd app list
+NAME                CLUSTER                         NAMESPACE  PROJECT  STATUS  HEALTH   SYNCPOLICY  CONDITIONS  REPO                                                          PATH            TARGET
+argocd/testing-app  https://kubernetes.default.svc  default    default  Synced  Healthy  Auto-Prune  <none>      https://github.com/Muhammadowais-ops/kubernetes-and-helm.git  argocd-example  HEAD
+
+
 
