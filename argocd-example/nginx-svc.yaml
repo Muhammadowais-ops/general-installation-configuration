@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-service  # Replace with your desired service name
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx  # This should match the label of your pod(s)
+  type: NodePort  # Specify type as NodePort
+  ports:
+  - port: 80  # This is the port the service will expose externally
+    targetPort: 80  # This is the port your nginx container is running on
+    nodePort: 30090  # You can choose any nodePort between 30000-32767
