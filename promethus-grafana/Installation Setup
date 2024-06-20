@@ -1,0 +1,84 @@
+### Grafana Promethus Setup to configure
+
+## Promethus Metrics Download links 
+https://prometheus.io/download/
+
+
+##First we need to setup grafana below are the setups for rhel and alma linux 
+
+Import the GPG key:
+
+wget -q -O gpg.key https://rpm.grafana.com/gpg.key
+sudo rpm --import gpg.key
+
+
+Create /etc/yum.repos.d/grafana.repo with the following content:
+
+[grafana]
+name=grafana
+baseurl=https://rpm.grafana.com
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.grafana.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+
+
+To install Grafana OSS, run the following command:
+
+
+sudo dnf install grafana
+
+
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+sudo systemctl status grafana-server
+
+
+
+## then we need to setup proemthus 
+
+
+wget https://github.com/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
+
+tar -xvf prometheus-2.52.0.linux-amd64.tar.gz
+## now running proemthus
+cd /root/prometheus-2.52.0.linux-amd64
+
+##need to update proemthus.yml  ## i am attaching the files in code
+
+##also alert file is also attaching in code
+
+## to run promethus 
+
+
+nohup ./prometheus &
+
+
+## if you want to export metric you can import dashboard in grafana go to grafana dashboard site and after that login into grafana and then dashboard options go to select import dashboard and import node metric dashboard and also blacbox exporter dashboard site
+
+
+
+
+
+
+
+
+################    pushgateway testing ############################
+in repo there is a simple bash script that i will import cpu metric and send it to pushgateway and then you check pushgateway
+
+also go to grafana from promethus search for metric name cpu metric and after that you can also check it on the then promethus that metric will be present
+
+## i have added the screenshot in pushgateway
+
+
+
+
+
+
+
+
+
+

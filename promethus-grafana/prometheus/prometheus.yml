@@ -1,0 +1,60 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  query_log_file: /root/prometheus-2.52.0.linux-amd64/query.log
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+           - localhost:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - first_rules.yml
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+
+
+  - job_name: node
+
+    static_configs:
+      - targets: ['172.17.101.3:9100']
+        labels:
+          instance: "localhost"
+          node: "node1"
+
+  - job_name: 'pushgateway'
+    static_configs:
+      - targets: ['localhost:9092']
+
+  - job_name: 'website_check'
+    scrape_interval: 1m  # Adjust this interval as needed (e.g., 5m for every 5 minutes)
+    metrics_path: /probe  # This is the default path used by blackbox exporter
+    params:
+      module: [http_2xx]  # Use the http_2xx module for HTTP checks
+    static_configs:
+    - targets:
+      - http://172.16.x.x:8080  # Replace with the actual website URL
+      - http://172.16.x.x:8080/test/login.do
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9115  # The blackbox exporter's real hostname:port.

@@ -1,0 +1,17 @@
+route:
+  receiver: 'Mail Alert'
+  # group_by: [ alertname ]
+  repeat_interval: 30s
+  group_wait: 15s
+  group_interval: 15s
+
+receivers:
+  - name: 'Mail Alert'
+    email_configs:
+      - smarthost: 'smtp.gmail.com:587'
+        auth_username: 'test@k.com'
+        auth_password: "yjrc kggu aplp puux"
+        from: 'testk@gmail.com'
+        to: 'tebe@gmail.com'
+        headers:
+          subject: 'Prometheus Mail Alerts'

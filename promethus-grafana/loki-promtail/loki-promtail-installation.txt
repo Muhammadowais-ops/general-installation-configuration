@@ -1,0 +1,14 @@
+######## installation ##########3
+
+dnf update
+dnf install loki promtail
+
+##########
+
+systemctl status promtail
+systemctl status loki
+
+##### configure both files 
+
+/etc/promtail/config.yml     ### this is main file to send logs using promtail agent to loki ###########
+/etc/loki/config.yml
