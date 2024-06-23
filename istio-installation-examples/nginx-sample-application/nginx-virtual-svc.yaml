@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-route
+spec:
+  hosts:
+  - app.test.com 
+  gateways:
+  - my-gateway
+  http:
+  - route:
+    - destination:
+        host: my-nginx-service
+        port: 
+          number: 8081
+
