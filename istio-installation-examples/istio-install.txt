@@ -48,3 +48,46 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 
 http://172.x.x.x:30600/productpage
 
+
+#####################  dashboard #############33
+
+kubectl apply -f samples/addons
+
+
+kiali.yaml file need to update for Nodeport
+
+
+# Source: kiali-server/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kiali
+  namespace: istio-system
+  labels:
+    helm.sh/chart: kiali-server-1.82.0
+    app: kiali
+    app.kubernetes.io/name: kiali
+    app.kubernetes.io/instance: kiali
+    version: "v1.82.0"
+    app.kubernetes.io/version: "v1.82.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: "kiali"
+  annotations:
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    appProtocol: http
+    protocol: TCP
+    port: 20001
+    targetPort: 20001
+    nodePort: 30011
+  - name: http-metrics
+    appProtocol: http
+    protocol: TCP
+    port: 9090
+  selector:
+    app.kubernetes.io/name: kiali
+    app.kubernetes.io/instance: kiali
+...
+
