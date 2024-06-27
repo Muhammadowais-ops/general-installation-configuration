@@ -1,0 +1,6 @@
+file.csv
+/root/shell-scripts
+/root/shell-scripts/file.csv
+12103
+0
+the name of script info.sh

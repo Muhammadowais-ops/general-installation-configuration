@@ -1,0 +1,13 @@
+ Static hostname: new.test
+       Icon name: computer-vm
+         Chassis: vm 🖴
+      Machine ID: f201d0b52c6846249f5fe6ec9901b339
+         Boot ID: 2b5999982c684f49964decc6ecd8bf01
+  Virtualization: microsoft
+Operating System: AlmaLinux 9.0 (Emerald Puma)
+     CPE OS Name: cpe:/o:almalinux:almalinux:9::baseos
+          Kernel: Linux 5.14.0-70.13.1.el9_0.x86_64
+    Architecture: x86-64
+ Hardware Vendor: Microsoft Corporation
+  Hardware Model: Virtual Machine
+Tue Jun 25 06:30:27 PM PKT 2024
