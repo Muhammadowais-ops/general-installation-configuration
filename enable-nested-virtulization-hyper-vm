@@ -1,0 +1,6 @@
+############# how to enable nested virtulization #############
+Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $true
+
+
+############ to turn off ###############
+Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $false
