@@ -1,0 +1,21 @@
+############ Download openshift crc installer from openshift ###########
+
+during installation there are couple of things we require
+
+we are doing this installation on hyper-v by creating a virtual machine in hyper-v that is alama linux 8.3
+
+####### First enable nested virtulization for vm ###############
+
+Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $true
+
+########
+after that run installer if you face any issue you can run these two command below to by pass
+
+crc config set skip-check-daemon-systemd-unit true
+crc config set skip-check-daemon-systemd-sockets true
+
+
+
+############# Disable nested virtulatization for vm ###############
+
+Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $false
