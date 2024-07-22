@@ -1,0 +1,24 @@
+as you can see in the picture we need to create a host to monitor website throught zabbix
+
+1) step create host
+2) after creating host go to the host and select web
+3) create web secnario for zabbix
+4) update values according to your request
+5) after creating the web now create the trigger according to the picture
+
+
+
+
+now need to monitor custom file size and set alert on file size if it is greater than given size send alerts
+
+1) create a new item for the host
+2) after create item for host with configuration
+3) also give tag value so it will show in items
+4) create custom trigger for custom items
+
+
+for mysql configuration attach mysql template like in picture
+
+1) after attaching the template we need to provide values in macros
+2) provide username password and hostvm-ip in which mysql is running
+
