@@ -1,0 +1,184 @@
+wazuh-installation
+setenforce 0
+getenforce
+curl -sO https://packages.wazuh.com/4.9/wazuh-certs-tool.sh
+curl -sO https://packages.wazuh.com/4.9/config.yml
+
+nodes:
+  # Wazuh indexer nodes
+  indexer:
+    - name: node-1                  
+      ip: "<indexer-node-ip>"                 ---> 127.0.0.1
+    #- name: node-2
+    #  ip: "<indexer-node-ip>"
+    #- name: node-3
+    #  ip: "<indexer-node-ip>"
+
+  # Wazuh server nodes
+  # If there is more than one Wazuh server
+  # node, each one must have a node_type
+  server:
+    - name: wazuh-1
+      ip: "<wazuh-manager-ip>"      ---> 127.0.0.1
+    #  node_type: master
+    #- name: wazuh-2
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
+    #- name: wazuh-3
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
+
+  # Wazuh dashboard nodes
+  dashboard:
+    - name: dashboard
+      ip: "<dashboard-node-ip>"    ---> 127.0.0.1
+
+
+bash ./wazuh-certs-tool.sh -A
+tar -cvf ./wazuh-certificates.tar -C ./wazuh-certificates/ .
+
+yum install coreutils
+rpm --import https://packages.wazuh.com/key/GPG-KEY-WAZUH
+echo -e '[wazuh]\ngpgcheck=1\ngpgkey=https://packages.wazuh.com/key/GPG-KEY-WAZUH\nenabled=1\nname=EL-$releasever - Wazuh\nbaseurl=https://packages.wazuh.com/4.x/yum/\nprotect=1' | tee /etc/yum.repos.d/wazuh.repo
+yum -y install wazuh-indexer
+
+
+NODE_NAME=node-1
+
+mkdir -p /etc/wazuh-indexer/certs
+
+cp wazuh-certificates/node-1.pem /etc/wazuh-indexer/certs/
+cp wazuh-certificates/node-1-key.pem /etc/wazuh-indexer/certs/
+cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/
+cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/
+cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/
+
+mv -n /etc/wazuh-indexer/certs/$NODE_NAME.pem /etc/wazuh-indexer/certs/indexer.pem
+mv -n /etc/wazuh-indexer/certs/$NODE_NAME-key.pem /etc/wazuh-indexer/certs/indexer-key.pem
+
+
+
+chmod 500 /etc/wazuh-indexer/certs
+chmod 400 /etc/wazuh-indexer/certs/*
+chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs
+
+
+systemctl daemon-reload
+systemctl enable wazuh-indexer
+systemctl start wazuh-indexer
+
+
+/usr/share/wazuh-indexer/bin/indexer-security-init.sh
+
+
+curl -k -u admin:admin https://127.0.0.1:9200
+
+curl -k -u admin:admin https://127.0.0.1:9200/_cat/nodes?v
+
+
+
+
+
+
+yum -y install wazuh-manager
+curl -so /etc/filebeat/filebeat.yml https://packages.wazuh.com/4.9/tpl/wazuh/filebeat/filebeat.yml
+
+filebeat keystore create
+
+
+echo admin | filebeat keystore add username --stdin --force
+echo admin | filebeat keystore add password --stdin --force
+
+
+curl -so /etc/filebeat/wazuh-template.json https://raw.githubusercontent.com/wazuh/wazuh/v4.9.0/extensions/elasticsearch/7.x/wazuh-template.json
+chmod go+r /etc/filebeat/wazuh-template.json
+
+
+
+curl -s https://packages.wazuh.com/4.x/filebeat/wazuh-filebeat-0.4.tar.gz | tar -xvz -C /usr/share/filebeat/module
+
+
+
+NODE_NAME=node-1
+
+
+mkdir /etc/filebeat/certs
+
+cp wazuh-certificates/node-1.pem /etc/filebeat/certs/
+cp wazuh-certificates/node-1-key.pem /etc/filebeat/certs/
+cp wazuh-certificates/root-ca.pem /etc/filebeat/certs/
+
+
+
+mv -n /etc/filebeat/certs/$NODE_NAME.pem /etc/filebeat/certs/filebeat.pem
+mv -n /etc/filebeat/certs/$NODE_NAME-key.pem /etc/filebeat/certs/filebeat-key.pem
+chmod 500 /etc/filebeat/certs
+chmod 400 /etc/filebeat/certs/*
+chown -R root:root /etc/filebeat/certs
+
+
+
+
+
+/var/ossec/bin/wazuh-keystore -f indexer -k username -v admin
+/var/ossec/bin/wazuh-keystore -f indexer -k password -v admin
+
+
+systemctl daemon-reload
+systemctl enable wazuh-manager
+systemctl start wazuh-manager
+
+systemctl status wazuh-manager
+
+systemctl daemon-reload
+systemctl enable filebeat
+systemctl start filebeat
+
+
+filebeat test output
+
+
+yum install libcap
+
+yum -y install wazuh-dashboard
+
+
+
+mkdir /etc/wazuh-dashboard/certs
+cp wazuh-certificates/node-1.pem /etc/wazuh-dashboard/certs/
+cp wazuh-certificates/node-1-key.pem /etc/wazuh-dashboard/certs/
+cp wazuh-certificates/root-ca.pem /etc/wazuh-dashboard/certs/
+mv -n /etc/wazuh-dashboard/certs/$NODE_NAME.pem /etc/wazuh-dashboard/certs/dashboard.pem
+mv -n /etc/wazuh-dashboard/certs/$NODE_NAME-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem
+
+
+chmod 500 /etc/wazuh-dashboard/certs
+chmod 400 /etc/wazuh-dashboard/certs/*
+chown -R wazuh-dashboard:wazuh-dashboard /etc/wazuh-dashboard/certs
+
+
+
+/usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh --api --change-all --admin-user wazuh --admin-password wazuh
+
+
+
+12/09/2024 10:22:18 INFO: Updating the internal users.
+12/09/2024 10:22:22 INFO: A backup of the internal users has been saved in the /etc/wazuh-indexer/internalusers-backup folder.
+12/09/2024 10:22:35 INFO: The filebeat.yml file has been updated to use the Filebeat Keystore username and password.
+12/09/2024 10:23:05 INFO: The password for user admin is Mnv6*tJ9Vodlx1ACGz.a42ftoBkRn+.3
+12/09/2024 10:23:05 INFO: The password for user anomalyadmin is 6Lf9A8pTfi+1q?HflbPCAhM9QNPdoIHN
+12/09/2024 10:23:05 INFO: The password for user kibanaserver is o0fw+?MhGFmDNVuWjeft7II?3tTLHYRa
+12/09/2024 10:23:05 INFO: The password for user kibanaro is LixzhfXSpAHllTu+FC02gbAXZQxUx6*1
+12/09/2024 10:23:05 INFO: The password for user logstash is lFgKv4duSVVPm58.cvsq+kM13BQhXd9a
+12/09/2024 10:23:05 INFO: The password for user readall is os4Z9*jmvxAX94Koe26vtuEQpd8r4yke
+12/09/2024 10:23:05 INFO: The password for user snapshotrestore is XYL9X4kqL2pDJ5lB6?Xi3hTvmjF.2wep
+12/09/2024 10:23:05 WARNING: Wazuh indexer passwords changed. Remember to update the password in the Wazuh dashboard, Wazuh server, and Filebeat nodes if necessary, and restart the services.
+12/09/2024 10:23:07 INFO: The password for Wazuh API user wazuh is Tb5*seu8znIY4eFbdG0OGytJvXA6GZGo
+12/09/2024 10:23:07 INFO: The password for Wazuh API user wazuh-wui is +kZ302*Lhi?3+??4TMFpzTinsz3TI.93
+12/09/2024 10:23:07 INFO: Updated wazuh-wui user password in wazuh dashboard. Remember to restart the service.
+
+
+
+yum remove firewalld
+
+
