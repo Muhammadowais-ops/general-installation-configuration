@@ -1,0 +1,22 @@
+##### https://documentation.wazuh.com/current/user-manual/capabilities/system-calls-monitoring/use-cases/monitoring-commands-run-as-root.html ###
+
+
+above link can we use to monitor every commands executed by root 
+
+but we need to monitor every commands so that we need to update audit rules 
+
+we are doing all these settings in orcale linux 
+
+
+to monitor every command add below entries in audit rules
+
+Add the rules below in the /etc/audit/audit.rules audit rule file:
+
+-a exit,always -F arch=b32 -S execve -k auoms
+-a exit,always -F arch=b64 -S execve -k auoms
+
+
+auditctl -R /etc/audit/audit.rules
+auditctl -l
+
+
