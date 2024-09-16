@@ -1,0 +1,11 @@
+https://documentation.wazuh.com/current/cloud-security/office365/monitoring-office365-activity.html#setting-up-wazuh-for-office-365-monitoring
+
+follow the above link to monitor office365 endpoint detection
+
+
+first we need to create an application from app registration
+
+then after creating app we also need to create certificates and secrets
+
+
+then you need to configure the credentials in your wazuh server
