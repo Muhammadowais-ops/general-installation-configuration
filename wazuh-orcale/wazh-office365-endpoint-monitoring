@@ -9,3 +9,8 @@ then after creating app we also need to create certificates and secrets
 
 
 then you need to configure the credentials in your wazuh server
+
+
+for client secret that is going to be the value which you have generated in the client certificates that is hidden
+
+and you can copy the client ID from overview of the application which you have created
