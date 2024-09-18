@@ -1,0 +1,20 @@
+https://documentation.wazuh.com/current/user-manual/user-administration/rbac.html#creating-and-setting-a-wazuh-read-only-user
+
+follow the above link to create internal user in wazuh
+
+## first create user by going to index management
+and then select security there
+
+## then click on Internal User
+
+after that 
+
+click create internal user
+
+create a user with password
+
+after that create a role by going to role section
+
+you can see the screenshot to create role
+
+and then mapped the user which you have created to the role
