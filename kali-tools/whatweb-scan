@@ -1,3 +1,5 @@
 #### kali linux tools whatweb for website scanning ########
 
 whatweb http://172.23.2.86 -a 4
+
+whatweb https://test***.com -a 4
