@@ -1,0 +1,26 @@
+#### https://documentation.wazuh.com/current/user-manual/manager/alert-management.html ###
+
+follow the above link for email configuration you need to install postfix server on your wazuh server
+where you are running wazuh
+
+<ossec_config>
+  <global>
+    <jsonout_output>yes</jsonout_output>
+    <alerts_log>yes</alerts_log>
+    <logall>no</logall>
+    <logall_json>no</logall_json>
+    <email_notification>yes</email_notification>   ---> update it to yes
+    <smtp_server>localhost</smtp_server>  ----> localhost
+    <email_from>xxxxx</email_from>
+    <email_to>xxx-xxx</email_to>
+    <email_maxperhour>100</email_maxperhour>
+    <email_log_source>alerts.log</email_log_source>
+    <agents_disconnection_time>10m</agents_disconnection_time>
+    <agents_disconnection_alert_time>0</agents_disconnection_alert_time>
+    <update_check>yes</update_check>
+  </global>
+
+
+
+### postfix need to installed and running for wazuh email configuration
+

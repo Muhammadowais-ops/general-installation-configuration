@@ -1,0 +1,34 @@
+####### to monitor using wazuh and send email alerts ###############
+
+by default wazuh has a configuration set for email that is below 
+
+<ossec_config>
+  <alerts>
+    <log_alert_level>3</log_alert_level>
+    <email_alert_level>12</email_alert_level>
+  </alerts>
+</ossec_config>
+
+
+this is to check alerts and set email alerts 
+
+email alerts are in alerts.log file
+
+/var/ossec/logs/alerts/alerts.log  ----> all the logs are here of wazuh
+
+there are also log level which is defined in the document
+
+https://documentation.wazuh.com/current/user-manual/ruleset/rules/rules-classification.html  ---> details of level
+
+
+######## now set more alerts like send alerts on email you can do something like below
+#
+#
+#<email_alerts>
+    <email_to>xxxxx</email_to>
+    <level>3</level>       ---> make sure that is should be higher than email_alert_level if not email will not send
+    <do_not_delay/>
+</email_alerts>
+
+###### for more detail visit the site
+https://documentation.wazuh.com/current/user-manual/manager/alert-management.html
