@@ -54,3 +54,5 @@ db.collections.find({features:{$all:[]}})       // to check all values and find 
 db.collection.find({},{model:1,_id:0}).count()  // if you don't want some like object id you can set it to zero
 
 db.collection.find({},{model:1,_id:0}).sort()      // it will show you the data in sorted format
+
+db.collection.find({},{model:1,_id:0}).limit(3)           // to show only three values 
