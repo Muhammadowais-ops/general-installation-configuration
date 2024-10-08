@@ -48,3 +48,9 @@ db.cars.find({model:{$exists:true}})   // to check the value is exist or not
 db.cars.find({features:{$size:3}})   /// to check if it has three values in array of it
 
 db.collections.find({features:{$all:[]}})       // to check all values and find values
+
+
+
+db.collection.find({},{model:1,_id:0}).count()  // if you don't want some like object id you can set it to zero
+
+db.collection.find({},{model:1,_id:0}).sort()      // it will show you the data in sorted format
