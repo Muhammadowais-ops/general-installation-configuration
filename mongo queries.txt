@@ -1,0 +1,50 @@
+mongo queries
+
+
+show dbs  /// to check database
+
+show collections /// to show database collection
+
+
+use db // to select database
+
+db.createCollection("myCollection")  // to create collection
+
+
+collection_name.drop() /// drop collection
+
+db.dropDatabase()  //drop database
+
+
+
+db.cars.updateOne(           //update data
+{model:"Nexon"}
+{$set:{color:"Red"}}
+);
+
+
+db.collection.find() // to find all data
+
+db.collection.find({model:"Nexon"})  //to find only model in all doucments
+db.collection.findOne({model:"Nexon"}  // to find only in one doucment
+db.collection.find({model:"Nexon",maker:"Honda"})  // to find these values
+db.collection.find({},{model:1})  // this will search where is model in all documents
+db.collection.find({"engine.cc":{$gt:1000}})   //this will search engine.cc value should be greater than 1000 in all documents
+db.collection.find({"engine.cc":{$in:[1498,1000,2000]}})   // to search multiple value like array you can give multiple value to search
+db.collection.find({"engine.cc":{$nin:[1498,1000,2000]}})  // not in these values
+
+
+
+db.cars.find({$and:[{model:"Venue"},{Make:"Hundai"}]})  // with and operator for multiple condition check
+
+
+db.cars.find({$or:[{model:"Venue"},{"engine.cc":{$gt:1000}}]})        // or operator to check multiple conditions
+
+
+
+db.cars.find({model:{$exists:true}})   // to check the value is exist or not
+
+
+db.cars.find({features:{$size:3}})   /// to check if it has three values in array of it
+
+db.collections.find({features:{$all:[]}})       // to check all values and find values
