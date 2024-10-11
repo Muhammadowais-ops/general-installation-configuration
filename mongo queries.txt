@@ -57,3 +57,15 @@ db.collection.find({},{model:1,_id:0}).sort()      // it will show you the data 
 
 db.collection.find({},{model:1,_id:0}).limit(3)           // to show only three values 
 db.cars.find({},{_id:0,model:1,maker:1}).sort({maker:1})    // to sort based on maker values
+
+
+
+db.aggreagate.aggregate([                //more complex fuction group based on _id with field is maker
+    {$group:{_id:"$maker"}}
+])
+
+db.aggreagate.aggregate([                            // show total how maker value is appearing like hundai is appearing 3 or 4 times that is totalcars sum function
+    {
+        $group:{_id:"$maker",TotalCars:{$sum:1}
+        }}
+])
