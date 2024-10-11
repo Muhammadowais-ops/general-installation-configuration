@@ -69,3 +69,12 @@ db.aggreagate.aggregate([                            // show total how maker val
         $group:{_id:"$maker",TotalCars:{$sum:1}
         }}
 ])
+
+
+db.aggreagate.aggregate([                 // to field maker and price in the document
+    {
+        $group:{
+            _id:"$maker",
+            Avgprice:{$avg:"$price"}
+        }}
+])
