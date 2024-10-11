@@ -56,3 +56,4 @@ db.collection.find({},{model:1,_id:0}).count()  // if you don't want some like o
 db.collection.find({},{model:1,_id:0}).sort()      // it will show you the data in sorted format
 
 db.collection.find({},{model:1,_id:0}).limit(3)           // to show only three values 
+db.cars.find({},{_id:0,model:1,maker:1}).sort({maker:1})    // to sort based on maker values
