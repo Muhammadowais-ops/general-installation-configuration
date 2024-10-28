@@ -1,0 +1,5 @@
+https://documentation.wazuh.com/current/user-manual/agent/agent-management/remove-agents/remove.html   ####### -----> mention is the link to remove agent
+or below are the steps
+
+/var/ossec/bin/manage_agents             -----> cli command
+/var/ossec/bin/manage_agents -r <WAZUH_AGENT_ID>                        --------------> cli command to remove agent
