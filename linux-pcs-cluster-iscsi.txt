@@ -1,0 +1,250 @@
+--------------- Configuring linux pcs cluster----------------------------
+-------- Things we require three virtual machine -------------------------
+------------ Two vm and one storage vm -----------------------
+-------------- Storage vm has 2 gb disk attach ---------------------------------
+-------------- Lets start ----------------------------------------
+
+-------- First create host entry for vms and setting static hostname --------------------------
+
+vm1 mainvm1.test.local 
+vm2 mainvm2.test.local
+storage storage.test.local
+
+
+--------- storage vm----------
+dnf install targetcli lvm2
+pvcreate /dev/sdb
+vgcreate vg_iscsi /dev/sdb
+lvcreate -l 100%FREE -n lv_iscsi vg_iscsi
+
+
+------- node1 -----
+dnf install isci-inittiator-utils lvm2
+cat /etc/iscsi/initiatorname.iscsi
+
+
+
+---- node2 ------------
+dnf install isci-inittiator-utils lvm2
+cat /etc/iscsi/initiatorname.iscsi
+
+
+
+-------- storage -----------
+
+targetcli
+cd /backstores/block
+create iscsi_shared_storage /dev/vg_iscsi/lv_iscsi
+cd /iscsi
+create
+cd iqn.2003-01.org.linux-iscsi.storage.x8664:sn.9ceb50dde5ce/tpg1/acls
+create iqn.1988-12.com.oracle:c23d6a3c9e9                 ----- provide iqn number which we copy from node1
+create iqn.1988-12.com.oracle:1724b295c50                 ----- provide iqn number which we copy from node2
+cd ..
+cd luns
+create /backstores/block/iscsi_shared_storage
+cd /
+saveconfig
+exit
+
+systemctl enable target --now
+
+firewall-cmd --permanent --add-port=3260/tcp
+firewall-cmd --reload
+cat /etc/target/saveconfig.json
+
+
+
+
+
+
+
+---------- node1 ------------
+iscsiadm -m discovery -t st -p 172.26.240.147            ------> here ip is storage vm ip
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.storage.x8664:sn.9ceb50dde5ce -p 172.26.240.147 -l               ---> storage vm ip
+systemctl restart iscsid
+systemctl enable iscsid
+
+----- node2
+iscsiadm -m discovery -t st -p 172.26.240.147            ------> here ip is storage vm ip
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.storage.x8664:sn.9ceb50dde5ce -p 172.26.240.147 -l                  ---> storage vm ip
+systemctl restart iscsid
+systemctl enable iscsid
+
+
+
+
+
+--------now disk is showing on both vm------------
+------- we are choosing node1 for disk partition in lvm -------------------
+------ node1------------
+pvcreate /dev/sdb
+vgcreate vg_apache /dev/sdb
+lvcreate -n lv_apache -l 100%FREE vg_apache
+mkfs.ext4 /dev/vg_apache/lv_apache
+lvs
+
+
+
+
+
+
+---------- node 2 -------------
+pvscan
+vgscan
+lvscan
+vgchange -ay vg_apache
+lvscan              -----------> now showing active
+
+
+
+
+----------node1------
+
+
+sudo dnf repolist
+sudo dnf config-manager --enable ol8_baseos_latest
+sudo dnf config-manager --enable ol8_appstream
+sudo dnf config-manager --enable ol8_addons
+sudo dnf config-manager --enable ol8_ha
+sudo dnf install -y pcs fence-agents-all pcp-zeroconf
+
+sudo firewall-cmd --permanent --add-service=high-availability
+sudo firewall-cmd --reload
+
+systemctl enable pcsd --now
+
+
+
+
+----- node2 -----------------
+sudo dnf repolist
+sudo dnf config-manager --enable ol8_baseos_latest
+sudo dnf config-manager --enable ol8_appstream
+sudo dnf config-manager --enable ol8_addons
+sudo dnf config-manager --enable ol8_ha
+sudo dnf install -y pcs fence-agents-all pcp-zeroconf
+systemctl enable pcsd --now
+
+
+sudo firewall-cmd --permanent --add-service=high-availability
+sudo firewall-cmd --reload
+
+
+
+
+------------- node1 ------------------
+
+
+
+passwd hacluster for node1 and node2  password need to be remain same on both to avoid any issue
+
+
+pcs host auth mainvm1.test.local mainvm2.test.local            ----->  node1 which is mainvm1.test.local
+Username: hacluster
+Password: 123
+
+
+pcs cluster setup mainvm1_cluster --start mainvm1.test.local mainvm2.test.local
+pcs cluster enable --all
+
+[root@localhost ~]# pcs cluster status
+Cluster Status:
+ Cluster Summary:
+   * Stack: corosync (Pacemaker is running)
+   * Current DC: mainvm2.test.local (version 2.1.7-5.2.0.1.el8_10-0f7f88312) - partition with quorum
+   * Last updated: Mon Dec 16 04:36:28 2024 on mainvm1.test.local
+   * Last change:  Mon Dec 16 04:36:07 2024 by hacluster via hacluster on mainvm2.test.local
+   * 2 nodes configured
+   * 0 resource instances configured
+ Node List:
+   * Online: [ mainvm1.test.local mainvm2.test.local ]
+
+PCSD Status:
+  mainvm1.test.local: Online
+  mainvm2.test.local: Online
+
+
+
+pcs status
+
+
+---------- node1 and node2 ----------
+pcs property set stonith-enabled=false
+dnf install -y httpd
+
+
+
+
+<Location /server-status>
+ SetHandler server-status
+ Require local
+</Location>
+
+
+
+systemctl enable httpd
+systemctl restart httpd
+
+----------- node1--------
+
+mount /dev/vg_apache/lv_apache /var/www/                            ---->node1
+cd /var/www/                                                        ---->node1
+[root@localhost www]# mkdir html                                    ---->node1
+[root@localhost www]# mkdir cgi-bin                                  ---->node1
+[root@localhost www]# mkdir error                                     ---->node1
+
+restorecon -R /var/www/                                             ---->node1
+umount /var/www/                                                   ---->node1
+
+
+
+---------- node1 and node2------------
+firewall-cmd --permanent --add-service={http,https}
+firewall-cmd --permanent --add-port={2224/tcp,2224/udp}
+firewall-cmd --reload
+
+
+
+--- node1 ------------
+
+
+pcs resource create httpd_fs Filesystem device="/dev/mapper/vg_apache-lv_apache" directory="/var/www" fstype="ext4"  --group apache
+pcs resource create httpd_vip IPaddr2 ip=172.26.248.62 cidr_netmask=24 --group apache
+pcs resource create httpd_ser apache configfile="/etc/httpd/conf/httpd.conf" statusurl="http://127.0.0.1/server-status" --group apache
+
+
+
+
+---- now go to browser----
+give this ip 172.26.248.62 
+172.26.248.62:2224/login          ----> redhat page         ---> username and password hacluster and password 123
+
+
+
+
+
+----- node1 -------in maintaince ------
+pcs node standby mainvm1.test.local
+pcs node unstandby mainvm1.test.local
+pcs status
+
+
+pcs resource move apache mainvm1.test.local
+pcs property set maintaince-mode=true
+pcs property set maintaince-mode=false
+
+
+pcs cluster start --all
+pcs cluster stop --all
+
+
+
+
+
+
+
+
+
+
+
