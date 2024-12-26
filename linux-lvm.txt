@@ -112,24 +112,37 @@ lsblk -f  ----> partition and lvm removed now----------
 
 
 
-############ restored removed lvm | recover mistakenly removed lvm ##############333
+############ restored removed lvm | recover mistakenly removed lvm ##############
+
+
+########## accidently delete lvm ###################
+
+
+lvremove /dev/Linux_VG/Linux_LV
 
 
 
+cd /etc/lvm/archive
+
+ls -ltrh | grep Linux_VG
+
+######### before running vgcfgrestore first unmount /dete #################
+
+unmount /dete
+lvchange -an /dev/Linux_VG/Linux_LV
 
 
 
+vgcfgrestore Linux_VG --test -f /etc/lvm/archive/Linux_VG_00000-1449541630.vg
 
 
+vgcfgrestore Linux_VG -f /etc/lvm/archive/Linux_VG_00000-1449541630.vg
+lvs
+lvscan
 
+vgscan
 
-
-
-
-
-
-
-
+lvchange -ay /dev/Linux_VG/Linux_LV
 
 
 
