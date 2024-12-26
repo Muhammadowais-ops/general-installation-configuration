@@ -1,0 +1,135 @@
+how to create lvm 
+
+i have attach a disk of 10gb
+
+lsblk 
+
+sdb ----> disk of 10 gb attach
+
+
+pvs ----> to check physical volume
+vgs  ---->  to check volume group
+lvs  ----> to check logical extend
+
+
+
+
+fdisk /dev/sdb
+
+
+now give n ---> to create partition
+
+
+
+then p
+
+then 
+default create 1 partition
+change type t
+
+hex code now give 8e
+
+
+now save for w
+
+
+partprobe              ----> to update parition table
+
+
+lsblk  to check disk now
+
+
+
+sdb                        8:16   0   10G  0 disk
+└─sdb1                     8:17   0   10G  0 part
+
+
+
+now starting lvm 
+
+
+
+vgcreate system /dev/sdb1               ----> in new file system rhel 8 or rhel 9 when we create volume group it directly create physical volume no need to create physical 
+lvcreate -L 3G -n data system             ----->  now create lvcreate command to create 3G size of lv all other lv are remain like 7 gb
+
+
+mkfs.ext4 /dev/system/data
+mount /dev/system/data /dete/
+
+df -hT
+lsblk -f
+
+
+########## now how to create snapshot of lvm #########
+
+
+lvcreate -L 1G -s -n snap_data /dev/system/data          ---> name of lvm which you want to take snapshot. snapshot created of data 
+
+
+---- now to restore snapshot first unmount lvm --------------
+umount /dete
+
+lvconvert --merge /dev/system/snap_data 
+
+lvchange -an /dev/system/data ------------- first deactivate 
+lvchange -ay /dev/system/data ------------- first reactivate
+
+/dev/system/data /dete/
+
+
+
+########## incase you want to remove lvm that is corrected like snaphost lvm that has been corrupt due to file changes in main lvm and snapshot size got full below is the command ######
+
+lvremove /dev/system/snap_data
+
+
+#### you can set snapshot grow threshold limit so it does not reached 100 percent  by default value is 100 percent ##########
+
+
+snapshot_autoextend_threshold = 70
+
+
+
+
+############# removing disk partition and lvm that is also attach with it ##############
+
+umount /dete/
+lvchange -an /dev/system/data
+lvremove /dev/system/data
+vgremove system
+pvremove /dev/sdb1
+fdisk /dev/sdb
+then select p
+and then d
+and then w
+
+lsblk -f  ----> partition and lvm removed now----------
+
+
+
+
+
+
+
+
+############ restored removed lvm | recover mistakenly removed lvm ##############333
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
