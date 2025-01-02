@@ -146,3 +146,93 @@ lvchange -ay /dev/Linux_VG/Linux_LV
 
 
 
+
+#################################
+
+volume split and volume merge 
+
+in this secanrio we have one disk of 10 gb and we have done partition and then break then down 2 partition that has lvm type
+
+
+
+fdisk /dev/sdb
+n
+p
+1
+enter
++5G
+t
+8e
+
+
+n
+p
+2
+enter
+enter
+t
+2
+8e
+
+w
+
+partprobe
+
+
+pvcreate /dev/sdb1 /dev/sdb2
+vgcreate vg1 /dev/sdb1
+vgcreate vg2 /dev/sdb2
+
+
+lvcreate -l 1000 -n lv1 vg1
+lvcreate -l 1000 -n lv2 vg2
+
+
+mkfs.ext4 /dev/vg1/lv1
+mkfs.xfs /dev/vg2/lv2
+
+
+mkdir /opt/v1
+mkdir /opt/v2
+
+mount /dev/vg1/lv1 /opt/v1/
+mount /dev/vg2/lv2 /opt/v2/
+df -hT
+cd /opt/v1/
+mkdir ad
+mkdir -p /opt/v2/ddd
+touch fil{1..10}.txt
+cd /opt/v2/ddd/
+
+touch file{1..10}.txt
+
+umount /opt/v*
+lvscan
+
+vgchange -an vg2
+lvscan
+
+vgmerge vg1 vg2
+
+lvscan
+lvchange -ay /dev/vg1/lv2
+
+mount /dev/vg1/lv1 /opt/v1/
+mount /dev/vg1/lv2 /opt/v2
+cd /opt/v1/
+cd /opt/v2/
+
+
+
+######## now working on split
+umount /opt/v*
+df -hT
+pvs
+vgchange -an vg1
+vgsplit vg1 vg2 /dev/sdb2
+vgchange -ay vg1 vg2
+mount /dev/vg1/lv1 /opt/v1/
+mount /dev/vg2/lv2 /opt/v2/
+cd /opt/v1/
+cd /opt/v2/
+
