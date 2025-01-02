@@ -144,6 +144,8 @@ vgscan
 
 lvchange -ay /dev/Linux_VG/Linux_LV
 
+######## list volume group to restore lvm
+vgcfgrestore --list vg2
 
 
 
