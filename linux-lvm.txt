@@ -238,3 +238,116 @@ mount /dev/vg2/lv2 /opt/v2/
 cd /opt/v1/
 cd /opt/v2/
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Migrate Physical Volumes (PVs) & LVM From One Disk To Another
+
+
+we are suppossing you have two disk 
+
+one disk is 
+
+sdb
+sdc
+
+we are moving data from sdb1 to sdc1 without unmount the filesystem using pvmove below are the steps
+
+############################   move physical volume
+
+
+
+fdisk /dev/sdb
+
+n
+p
+enter
+enter
+t
+8e
+w
+
+lsblk
+partprobe
+
+pvcreate /dev/sdb1
+vgcreate dataVG /dev/sdb1
+lvcreate -l 1000 -n dataLV dataVG
+mkfs.ext4 /dev/dataVG/dataLV
+
+
+mkdir /opt/data
+mount /dev/dataVG/dataLV /opt/data/
+
+cd /opt/data/
+
+
+touch file{1..20}.txt
+mkdir aa bb cc
+
+
+fdisk /dev/sdc
+n
+p
+enter
+enter
+t
+8e
+w
+
+partprobe
+lsblk
+
+
+pvcreate /dev/sdc1
+vgextend dataVG /dev/sdc1
+
+
+dmsetup deps /dev/dataVG/dataLV   ---> to check disk dependencies
+
+
+pvmove -n dataLV /dev/sdb1 /dev/sdc1             -----> first physical volume data which we want to move other target physical volume
+
+lsblk
+
+vgreduce dataVG /dev/sdb1            ---> now reducing the data volume group
+
+
+
+
+############################# how to move root file system from one physical volume to another #####################
+
+
+
+fdsik /dev/sdb
+
+partprobe
+pvcreate /dev/sdb1
+vgextend ol /dev/sdb1
+pvmove -n root /dev/sda2 /dev/sdb1
+pvmove -n swap /dev/sda2  /dev/sdb1
+vgreduce ol /dev/sda2
+
+
+
+
+
+
+
+
+
+
+
