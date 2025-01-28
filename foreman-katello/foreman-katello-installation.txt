@@ -1,0 +1,66 @@
+Foreman katello Installation and Configuration
+
+
+Foreman Katello installation url is below
+
+https://docs.theforeman.org/3.4/Installing_Server/index-katello.html#Preparing_your_Environment_for_Installation_foreman  
+
+
+We are installing it for Centos 8 Stream   --->  you need atleast 4 core and 16 gb of ram for minimal system to run
+
+dnf clean all
+dnf install https://yum.theforeman.org/releases/3.4/el8/x86_64/foreman-release.rpm
+dnf install https://yum.theforeman.org/katello/4.6/katello/el8/x86_64/katello-repos-latest.rpm
+dnf install https://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+dnf config-manager --set-enabled powertools
+dnf module enable katello:el8 pulpcore:el8
+
+
+dnf update
+dnf install foreman-installer-katello
+
+
+firewall-cmd \
+--add-port="53/udp" --add-port="53/tcp" \
+--add-port="67/udp" \
+--add-port="69/udp" \
+--add-port="80/tcp" --add-port="443/tcp" \
+--add-port="5647/tcp" \
+--add-port="8000/tcp" --add-port="9090/tcp" \
+--add-port="8140/tcp"
+
+
+foreman-installer --scenario katello \
+--foreman-initial-organization "My_Organization" \
+--foreman-initial-location "My_Location" \
+--foreman-initial-admin-username admin_user_name \
+--foreman-initial-admin-password admin_password
+
+
+foreman-installer --enable-foreman-proxy-plugin-remote-execution-ssh
+foreman-installer --enable-foreman-proxy-plugin-remote-execution-script
+
+
+hammer ping   ---> to check status
+foreman-maintain service status -b      ---> to check all service status
+
+
+
+###### how to connect client for client machine we need to centos 8 vm
+
+
+to connect you can to foreman katello cli and login into that i am attaching the all the screenshot for reference
+
+
+
+
+
+
+
+
+
+
+
+
+
+
