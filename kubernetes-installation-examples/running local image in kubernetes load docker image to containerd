@@ -4,7 +4,7 @@ after that commands need to run
 
 
 docker build -t test:V1 .
-docker save -o test:v1.img test
+docker save -o test test:v1.img
 ctr -n=k8s.io images import test:v1.img
 crictl image ls
 IMAGE                                     TAG                 IMAGE ID            SIZE
