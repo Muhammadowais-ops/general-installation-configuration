@@ -1,0 +1,52 @@
+####### rhel 9.5 i have use developer account
+
+3 vms with one extra disk of 12 gb on each node
+
+
+subscription-manager repos --enable=rhceph-5-tools-for-rhel-9-x86_64-rpms
+subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
+subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+ 
+ 
+yum install cephadm
+ 
+cephadm install
+cephadm bootstrap --mon-ip 172.30.140.52
+ 
+ 
+cephadm shell
+ 
+ 
+ceph -s
+ 
+ceph orch host add ceph02 172.30.135.41
+ceph orch host add ceph03 172.30.131.247
+
+
+ceph orch host ls
+ceph orch device ls
+
+ceph osd tree
+
+ceph orch daemon add osd ceph01:/dev/sdb
+
+ceph osd tree
+
+
+ceph orch daemon add osd ceph02:/dev/sdb
+ceph orch daemon add osd ceph03:/dev/sdb
+
+
+
+ceph orch ps  ---> check container status 
+ceph orch ls --> check monitor node
+
+ceph -s ---> check health 
+
+### we are seeing error in ceph we have debug with below command and then fix it
+ceph orch ps ---> show error on node exporter
+
+
+ceph orch rm node-exporter               ---> removing
+ceph orch apply node-exporter           ---> adding it again
+
