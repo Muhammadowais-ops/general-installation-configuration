@@ -50,3 +50,70 @@ ceph orch ps ---> show error on node exporter
 ceph orch rm node-exporter               ---> removing
 ceph orch apply node-exporter           ---> adding it again
 
+
+
+
+
+
+
+##### pool creation #############
+ceph osd pool create new1 
+
+ceph osd pool create repool3 32 32 replicated
+
+ceph osd pool set repool3 size 4
+
+ceph osd pool rename repool3 repoolnew
+
+
+
+
+ceph osd pool ls
+
+
+
+
+####### enable delete for pool##############
+ceph config set mon mon_allow_pool_delete true
+ceph config get mon mon_allow_pool_delete
+
+
+
+###########now delete##################
+ceph osd pool delete repoolnew repoolnew --yes-i-really-really-mean-it
+
+
+
+ceph osd erauser-code-profile ls
+
+
+ceph osd erasure-code-profile set erause-profile-k2-m2 k=2 m=2
+
+
+ceph osd erasure-code-profile set ec-profile-k2-m2 \
+    plugin=jerasure \
+    k=2 \
+    m=2 \
+    crush-failure-domain=osd
+
+ceph osd erasure-code-profile get ec-profile-k2-m2
+
+
+ceph osd pool create erasure-pool erasure ec-profile-k2-m2
+
+
+
+##### ceph osd status ########
+ceph osd status
+
+ceph health detail
+ceph osd dump
+ceph df
+
+
+
+
+
+
+
+
