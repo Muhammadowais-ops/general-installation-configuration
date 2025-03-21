@@ -110,7 +110,9 @@ ceph health detail
 ceph osd dump
 ceph df
 
-
+#### ceph config #########
+ceph config dump    
+ceph config get mon.* 
 
 
 
