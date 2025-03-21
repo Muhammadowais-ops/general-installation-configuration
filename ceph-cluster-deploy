@@ -116,6 +116,38 @@ ceph config get mon.*
 
 
 
+########## ceph authentication ###############
+
+ceph auth list      # List all keys and capabilities
+ceph auth get client.admin
+
+ceph auth get-or-create client.myuser mon 'allow r' osd 'allow rw pool=myreplicapool'
+
+
+
+
+ceph auth get-or-create client.readonlyuser \
+  mon 'allow r' \
+  osd 'allow r pool=device_health_metrics'
+
+
+ceph auth get client.readonlyuser -o /etc/ceph/ceph.client.readonlyuser.keyring
+
+
+ ceph auth get client.readonlyuser
+
+
+ceph --name client.readonlyuser --keyring /etc/ceph/ceph.client.readonlyuser.keyring \
+  osd pool ls
+
+
+
+ceph --name client.readonlyuser --keyring /etc/ceph/ceph.client.readonlyuser.keyring \
+  osd pool stats device_health_metrics                                   ########## This user will only be able to read from the device_health_metrics pool and cannot write or access other pools.
+
+
+
+
 
 
 
