@@ -217,6 +217,29 @@ ceph osd setcrushmap -i newcrush.map
 ceph osd pool create hostpool 64 64 replicated replicate_across_hosts
 
 
+ceph osd pool ls
+
+
+
+echo "hello ceph" > testfile
+rados -p hostpool put test1 testfile
+ceph osd map hostpool test1
+
+
+
+ceph orch daemon stop osd.1
+rados -p hostpool get test1 test1-out
+cat test1-out
+
+
+ceph orch daemon restart osd.1
+
+
+
+
+
+
+
 
 
 
