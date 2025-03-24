@@ -188,5 +188,45 @@ ceph-fuse -n client.cephfsuser --keyring /etc/ceph/ceph.client.cephfsuser.keyrin
 
 
 
+$$$$$$$$$ CRUSH MAP $$$$$$$$$$$$$$$$$$$$
+ceph osd getcrushmap -o crush.map
+crushtool -d crush.map -o crush.txt
+
+
+vim crush.txt
+
+rule replicate_across_hosts {                               ----> at the end of file
+    ruleset 10
+    type replicated
+    min_size 1
+    max_size 10
+    step take default
+    step chooseleaf firstn 2 type host
+    step emit
+}
+
+
+
+
+
+
+crushtool -c crush.txt -o newcrush.map
+ceph osd setcrushmap -i newcrush.map
+
+
+ceph osd pool create hostpool 64 64 replicated replicate_across_hosts
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
