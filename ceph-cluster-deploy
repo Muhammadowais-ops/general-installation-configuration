@@ -239,6 +239,86 @@ ceph orch daemon restart osd.1
 
 
 
+############### rbd (RADOS Block Device) ##################
+
+
+
+ceph osd pool create rbd 128
+rbd pool init rbd
+
+
+rbd create mydisk --size 1024 --pool rbd
+
+
+rbd ls rbd
+
+
+
+dnf list installed | grep kernel-modules-extra
+
+
+sudo dnf install -y kernel-modules-extra
+
+
+
+rbd map mydisk --pool rbd
+
+
+
+mkfs.ext4 /dev/nbd0
+mkdir /mnt/myrbd
+mount /dev/nbd0 /mnt/myrbd
+
+
+umount /mnt/myrbd
+rbd device unmap /dev/nbd0
+
+
+
+rbd showmapped
+
+########### snapshots###############
+
+
+rbd snap create rbd/mydisk@snap1
+
+rbd snap ls rbd/mydisk
+
+
+
+rbd snap protect rbd/mydisk@snap1
+
+rbd clone rbd/mydisk@snap1 rbd/myclone
+
+
+
+
+######### Delete the Snapshot ###############
+
+
+rbd snap unprotect rbd/mydisk@snap1
+
+rbd snap rm rbd/mydisk@snap1
+
+
+
+
+########### rollback snaphot #############
+
+umount /mnt/myrbd
+rbd device unmap /dev/rbd0
+rbd snap rollback rbd/mydisk@snap1
+
+
+rbd map mydisk --pool rbd
+mount /dev/rbd0 /mnt/myrbd
+
+
+
+
+
+
+
 
 
 
