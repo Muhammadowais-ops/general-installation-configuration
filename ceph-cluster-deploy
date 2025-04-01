@@ -9,7 +9,12 @@ subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
  
  
 yum install cephadm
- 
+
+podman login registry.redhat.io
+Username: xxxxxxxx
+Password: xxxxxxxxxxxxx
+
+
 cephadm install
 cephadm bootstrap --mon-ip 172.30.140.52
  
