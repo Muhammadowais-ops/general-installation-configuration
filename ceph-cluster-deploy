@@ -321,6 +321,30 @@ mount /dev/rbd0 /mnt/myrbd
 
 
 
+############# delete cephfs ##########
+
+[ceph: root@ceph01 /]# ceph orch ps --daemon-type mds
+NAME                        HOST    PORTS  STATUS        REFRESHED  AGE  MEM USE  MEM LIM  VERSION            IMAGE ID      CONTAINER ID
+mds.mycephfs.ceph01.givrpv  ceph01         running (2h)     3m ago  12d    24.0M        -  16.2.10-275.el8cp  d7a74ab527fa  3fbf925e1cdf
+mds.mycephfs.ceph02.hpsjwm  ceph02         running (2h)     3m ago  12d    26.6M        -  16.2.10-275.el8cp  d7a74ab527fa  1d5007de486e
+mds.mycephfs.ceph03.aqerbx  ceph03         running (2h)     8m ago  12d    25.3M        -  16.2.10-275.el8cp  d7a74ab527fa  e5a19aaad18f
+[ceph: root@ceph01 /]# ceph orch rm mds.mycephfs
+Removed service mds.mycephfs
+[ceph: root@ceph01 /]# ceph orch ps --daemon-type mds
+NAME                        HOST    PORTS  STATUS        REFRESHED  AGE  MEM USE  MEM LIM  VERSION            IMAGE ID      CONTAINER ID
+mds.mycephfs.ceph03.aqerbx  ceph03         running (2h)     9m ago  12d    25.3M        -  16.2.10-275.el8cp  d7a74ab527fa  e5a19aaad18f
+[ceph: root@ceph01 /]# ceph fs fail mycephfs
+mycephfs marked not joinable; MDS cannot join the cluster. All MDS ranks marked failed.
+[ceph: root@ceph01 /]# ceph fs rm mycephfs --yes-i-really-mean-it
+[ceph: root@ceph01 /]# ceph osd pool delete cephfs_data cephfs_data --yes-i-really-really-mean-it
+pool 'cephfs_data' removed
+[ceph: root@ceph01 /]# ceph osd pool delete cephfs_metadata cephfs_metadata --yes-i-really-really-mean-it
+pool 'cephfs_metadata' removed
+[ceph: root@ceph01 /]#
+
+
+
+
 
 
 
