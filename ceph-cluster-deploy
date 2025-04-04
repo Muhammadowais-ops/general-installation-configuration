@@ -349,6 +349,95 @@ pool 'cephfs_metadata' removed
 
 
 
+1) Prepare the Pool on Both Clusters
+
+We’ll create the same pool name mirror_fresh on each cluster, in image mode.
+
+On Primary (ceph01):
+
+
+ceph osd pool create mirror_fresh 64
+rbd mirror pool enable mirror_fresh image
+ceph osd pool application enable mirror_fresh rbd
+
+
+
+On Secondary (ceph-rbd1):
+
+
+ceph osd pool create mirror_fresh 64
+rbd mirror pool enable mirror_fresh image
+ceph osd pool application enable mirror_fresh rbd
+
+
+
+
+1. On Secondary Cluster (ceph-rbd1, 172.30.130.133)
+
+Generate a bootstrap token:
+
+
+rbd mirror pool peer bootstrap create mirror_fresh > /etc/ceph/peer-token
+scp /etc/ceph/peer-token root@172.30.140.52:/tmp/
+
+
+
+2. Copy this peer-token file to Primary Cluster (ceph01, 172.30.140.52)
+
+
+cephadm shell --mount /etc/ceph/peer-token:/peer-token
+rbd mirror pool peer bootstrap import mirror_fresh /peer-token
+
+
+
+
+3) Verify RBD Mirror Daemons
+
+
+ceph orch ps --daemon-type rbd-mirror
+
+If missing, deploy on both clusters:
+
+ceph orch apply rbd-mirror
+
+
+4) Enable Mirroring on Pool and Image
+On both clusters:
+
+
+rbd mirror pool enable mirror_fresh image
+
+
+rbd create mirror_fresh/testimg --size 512M
+rbd mirror image enable mirror_fresh/testimg journal
+
+
+rbd mirror pool status mirror_fresh --verbose
+
+
+5) List Mirrored Images on the Secondary
+
+rbd -p mirror_fresh ls
+
+
+
+
+firewalld for ports
+sudo firewall-cmd --permanent --add-port=3300/tcp
+sudo firewall-cmd --permanent --add-port=6789/tcp
+sudo firewall-cmd --permanent --add-port=6800-7300/tcp
+sudo firewall-cmd --reload
+
+
+
+
+
+
+
+
+
+
+
 
 
 
