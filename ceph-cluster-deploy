@@ -438,6 +438,15 @@ sudo firewall-cmd --reload
 
 
 
+########## removing ceph mirroring ###############
+
+
+
+rbd mirror pool disable mirror_fresh
+rbd mirror pool info mirror_fresh
+rbd mirror pool peer remove mirror_fresh 902ef16b-fe48-4c00-b211-ced466a72c32
+ceph orch rm rbd-mirror
+ceph osd pool delete mirror_fresh mirror_fresh --yes-i-really-really-mean-it
 
 
 
