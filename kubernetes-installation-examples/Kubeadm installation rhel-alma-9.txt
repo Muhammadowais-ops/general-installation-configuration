@@ -51,6 +51,7 @@ sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 sudo systemctl enable --now kubelet
 
 
+kubeadm config images pull
 
 kubeadm init --control-plane-endpoint=localhost.localdomain \
   --ignore-preflight-errors=DirAvailable--var-lib-etcd \
@@ -73,7 +74,7 @@ kubectl taint nodes localhost.localdomain node-role.kubernetes.io/not-ready:NoSc
 
 
 kubectl get pods -n kube-system
-kubeadm config images pull
+
 
 
 
