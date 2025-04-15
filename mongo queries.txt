@@ -120,3 +120,18 @@ db.hypernet_idletime.aggregate([
     }
   }
 ])
+
+
+
+
+db.hypernet_idletime.aggregate([
+  { $match: { device_id: "355087093860565" } },
+  {
+    $project: {
+      location: 1,
+      duration: 1,
+      _id: 0
+    }                                      // specific field to include and exclude 1 for include and 0 for exclude
+  }
+])
+
