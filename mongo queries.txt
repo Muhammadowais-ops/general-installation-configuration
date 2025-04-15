@@ -78,3 +78,45 @@ db.aggreagate.aggregate([                 // to field maker and price in the doc
             Avgprice:{$avg:"$price"}
         }}
 ])
+
+
+
+
+
+
+
+
+
+db.hypernet_idletime.aggregate([
+  { $group: { _id: "$device_id", count: { $sum: 1 } } }
+])
+
+
+db.hypernet_idletime.aggregate([
+  { $group: { _id: "$device_id", lat: { $sum: 1 } } }
+])
+
+
+db.hypernet_idletime.aggregate([
+  {
+    $match: {
+      device_id: "355087093860565",
+      start_time: { $gte: ISODate("2022-05-22T00:00:00Z") },
+      end_time: { $ne: null }
+    }
+  }
+])
+
+
+
+db.hypernet_idletime.aggregate([
+  { 
+    $match: { id: { $gt: 1 } } 
+  },
+  {
+    $group: {
+      _id: "$device_id",  // group by device
+      totalDuration: { $sum: "$duration" }  // sum durations
+    }
+  }
+])
