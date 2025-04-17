@@ -37,6 +37,14 @@ sudo systemctl start grafana-server
 sudo systemctl status grafana-server
 
 
+http://172.26.157.77:3000/  ------------------->   grafana server url
+
+default credentials will be 
+
+admin
+admin
+
+
 
 ## then we need to setup proemthus 
 
