@@ -1,0 +1,117 @@
+---
+# 1. ConfigMap for v1 HTML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: html-v1
+data:
+  index.html: |
+    <html>
+      <head><title>Sample App v1</title></head>
+      <body style="font-family: sans-serif; text-align: center;">
+        <h1>🚀 Sample App Version 1 (Stable)</h1>
+        <p>This is the stable release (v1).</p>
+      </body>
+    </html>
+---
+# 2. ConfigMap for v2 HTML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: html-v2
+data:
+  index.html: |
+    <html>
+      <head><title>Sample App v2</title></head>
+      <body style="font-family: sans-serif; text-align: center; background-color: #eef;">
+        <h1>🧪 Sample App Version 2 (Canary)</h1>
+        <p>This is the canary release (v2).</p>
+      </body>
+    </html>
+---
+# 3. Deployment & Service for v1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app-v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: sample-app
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: html
+        configMap:
+          name: html-v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app-v1
+spec:
+  selector:
+    app: sample-app
+    version: v1
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# 4. Deployment & Service for v2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: sample-app
+        version: v2
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: html
+        configMap:
+          name: html-v2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app-v2
+spec:
+  selector:
+    app: sample-app
+    version: v2
+  ports:
+  - port: 80
+    targetPort: 80
+
