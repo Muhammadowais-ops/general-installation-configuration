@@ -1,0 +1,35 @@
+############ gateway api documentation from nginx side ################
+
+https://docs.nginx.com/nginx-gateway-fabric/install/manifests/
+
+######## below are the steps to install gateway api ############
+
+kubectl kustomize "https://github.com/nginx/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v2.0.1" | kubectl apply -f -
+
+kubectl apply -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.0.1/deploy/crds.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.0.1/deploy/default/deploy.yaml
+
+
+kubectl get pods -n nginx-gateway
+
+kubectl get svc nginx-gateway -n nginx-gateway
+
+
+kubectl patch svc nginx-gateway -n nginx-gateway -p '{"spec": {"type": "LoadBalancer"}}'
+
+kubectl get svc nginx-gateway -n nginx-gateway
+
+
+####### now we want to this gateway for port 80 ################
+
+1) run the deployment file below
+
+kubectl apply -f nginx-gateway.yaml
+
+
+2) Below is the sample application to configure with gateway run the deployment and service files below are the commands
+
+kubectl apply -f sample.yaml
+kubectl apply -f sample-httproute.yaml 
+

@@ -1,0 +1,26 @@
+############  how to connect orcale cloud cli ##############3
+
+sudo dnf -y install oraclelinux-developer-release-el8
+sudo dnf install python36-oci-cli
+
+#### how to connect orcale cloud from oci cli #########
+oci setup config
+
+
+
+1) copy your oci user id from your profile -> go to profile and copy the oci id
+2) copy your tenant oci id from tenant profile -> go to profile and copy the oci id
+3) provide the region in my case it is -> me-riyadh-1
+4) after it will generate api key -> you can give key name
+copy the public key to your profile and in the api section copy the public key 
+5) there will error so we need to set permission of the key also ->   below is the command
+
+chmod 600 /root/.oci/tested.pem
+
+7) then run the command below to identify it
+
+oci iam region list
+
+8) if allow then your oci cli is connect to the console
+ 
+
