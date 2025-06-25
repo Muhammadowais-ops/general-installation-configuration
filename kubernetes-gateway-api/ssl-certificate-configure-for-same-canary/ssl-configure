@@ -1,0 +1,39 @@
+############## we are using same canary deployment we do prevouisly for ssl certificate ##############
+Below create secret for tls certificate
+
+kubectl create secret tls my-tls-secret \
+  --cert=universal-net-2025.crt\
+  --key=unverisal-net-2025.key \
+  -n nginx-gateway
+
+########## now applying the certificate ################
+
+
+
+kubectl patch gateway nginx-gateway   -n nginx-gateway   --type=json   -p='[{
+    "op":"add",
+    "path":"/spec/listeners/-",
+    "value":{
+      "name":"https",
+      "protocol":"HTTPS",
+      "port":443,
+      "tls":{
+        "mode":"Terminate",
+        "certificateRefs":[{"kind":"Secret","name":"my-tls-secret"}]
+      }
+    }
+  }]'
+
+
+Below is the output should looks like
+
+
+nginx-gateway   service/nginx-gateway-nginx        LoadBalancer   10.96.15.229    84.8.123.63   80:31140/TCP,443:31174/TCP   28h
+
+################
+
+just update the url accordingly in your httproute
+
+it will work 
+
+############
