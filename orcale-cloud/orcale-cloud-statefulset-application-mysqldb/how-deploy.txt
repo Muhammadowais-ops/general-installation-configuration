@@ -1,0 +1,16 @@
+################ statefulset application deployment ##################
+
+we are deploying this statefulset mysql application
+
+######## create sc first ############
+
+apply sc.yaml
+
+
+######### create statefulset and headless service ###########
+
+
+apply all.yaml
+
+
+@@@@@@@ Note statefulset create in order if first pod does not successful others will also not able to create. Also every stateful will create it own pvc for every pod @@@@@@@@@@@@@@@@@
