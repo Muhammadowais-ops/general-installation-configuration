@@ -1,0 +1,14 @@
+type: OCI
+config:
+  provider: raw
+  bucket: "bucket-2"
+  user_ocid: ""
+  tenancy_ocid: ""
+  region: "me-riyadh-1"
+  fingerprint: "bd:3"
+  passphrase: "a" # <-- VERIFY THIS IS CORRECT
+  compartment_ocid: "oci"
+  privatekey: | # <-- CHANGE `private_key` TO `privatekey`
+    -----BEGIN ENCRYPTED PRIVATE KEY-----
+    APKre22UfEjT4c8bv5q5pZJr84DymrUNMhzhWsQ3u3X3S/NfmQKRRcM=
+    -----END ENCRYPTED PRIVATE KEY-----

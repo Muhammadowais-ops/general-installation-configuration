@@ -1,0 +1,45 @@
+prometheus:
+  prometheusSpec:
+    disableCompaction: false
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: oci-bv
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+    thanos:
+      image: quay.io/thanos/thanos:v0.39.1
+      objectStorageConfig:
+        existingSecret:
+          name: thanos-objstore
+          key: objstore.yml
+
+  thanosService:
+    enabled: true
+    annotations: {}
+    labels: {}
+    externalTrafficPolicy: Cluster
+    type: ClusterIP
+    portName: grpc
+    port: 10901
+    targetPort: "grpc"
+    httpPortName: http
+    httpPort: 10902
+    targetHttpPort: "http"
+    clusterIP: ""
+    nodePort: 30901
+    httpNodePort: 30902
+
+grafana:
+  enabled: true
+  service:
+    type: LoadBalancer     # To expose Grafana externally, or use NodePort/Ingress
+  adminPassword: "1234"   # Set admin password (optional)
+  ingress:
+    enabled: false
+
+alertmanager:
+  enabled: false  # Disable Alertmanager
+

@@ -1,0 +1,62 @@
+######### we are configuring promethus with thanos on orcale cloud oke cluster ####################
+
+first create oke cluster i am using free cluster but things to remember what types of workers we are creating
+
+1) create cluster
+2) put worker nodes on private subnet ---> important point because public subnet worker will not work because of dns issue
+
+
+############# now we are procedding with deployment you can follow orcale oci guide to create key pair and connect cluster #########
+
+#### cluster connect with compute instance now starting all the deployment for thanos with promethus #######
+
+we have created objstore.yml create exactly this file also you need to create bucket in orcale cloud
+you can see the values require in objstore yml file which is bucket name and other things you can check from your oci config file be sure the provide all values there and paste key in exact format which i have place in file
+then create secret below
+
+
+kubectl create secret generic thanos-objstore --from-file=objstore.yml -o yaml --dry-run=client | kubectl apply -f -
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus-stack prometheus-community/kube-prometheus-stack -f values.yaml
+
+
+#### below command to check logs if your thanos side car able to connect bucket and upload metadata file you will have to wait two after successful connection every two hour it will upload it
+
+kubectl logs -f prometheus-prometheus-stack-kube-prom-prometheus-0 -c thanos-sidecar
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install thanos bitnami/thanos -f thanos.values.yaml
+
+now the svc which we expose thanos  query you can copy ip and port 
+
+go to endpoints there you will see the sidecar and store up or not
+
+
+
+
+########### last grafana #############
+default user is admin
+and password we define in file
+
+
+go to grafana and click on connection and select source promethus and provide thanos-query url like below
+
+http://thanos-query.default.svc.cluster.local:9090
+
+
+you can use below import dashboard
+
+
+Open your Grafana UI.
+
+Go to + Create > Import.
+
+In the Import via grafana.com field, enter: 6417
+
+Click Load.
+
+Select your Thanos Query datasource.
+
+Click Import.
