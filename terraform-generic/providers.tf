@@ -19,6 +19,12 @@ terraform {
     #   version = "~> 4.0"
     # }
   }
+  backend "azurerm" {                                         ---> use this configuration for state locking in azure 
+      resource_group_name  = "terraform-state-rg"
+      storage_account_name = "stateterraform121"
+      container_name       = "testcontainer"
+      key                  = "terraform.tfstate"
+  }
 }
 
 # AWS Provider Configuration (empty for now)
@@ -33,7 +39,7 @@ terraform {
 
 # Azure Provider Configuration (using the azurerm provider)
 provider "azurerm" {
-  subscription_id = ""
+  subscription_id = "c45b407a-1a1f-4c95-8abc-10cfa51c8b07"
   features {}  # Required for Azure to work
 }
 
@@ -41,9 +47,9 @@ provider "azurerm" {
 # provider "oci" {
 #   tenancy_ocid        = "ocid1.tenancy.xxxx"
 #   user_ocid           = "ocid1.user.oc1..xxxxx"
-#   fingerprint         = "f9:5:7c:de:96:7a:5e:3b"
+#   fingerprint         = "f9:56:c2:72:e6:e8:5d:a5:70:5a:7c:de:96:7a:5e:3b"
 #   private_key_path    = "/Users/xxxxx/Downloads/t.pem"
-#   region              = "m"
+#   region              = "me-riyadh-1"
 # }
 
 
