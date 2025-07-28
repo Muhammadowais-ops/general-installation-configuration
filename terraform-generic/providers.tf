@@ -20,9 +20,9 @@ terraform {
     # }
   }
   backend "azurerm" {                                         ---> use this configuration for state locking in azure 
-      resource_group_name  = "terraform-state-rg"
-      storage_account_name = "stateterraform121"
-      container_name       = "testcontainer"
+      resource_group_name  = "xxxxx"
+      storage_account_name = "xxxxx"
+      container_name       = "xxxxxx"
       key                  = "terraform.tfstate"
   }
 }
