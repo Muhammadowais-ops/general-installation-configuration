@@ -1,0 +1,295 @@
+############# below is pipeline if you don't want this pipeline to trigger so we are using never ##############
+####### also you can define workflow on the top of the file in case you don't want expliclity define in every build step ###############
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH          ### this is going commit any thing default branch which is main pipeline will never run
+      when: never
+###### this is variable $CI_DEFAULT_BRANCH will always be main branch #####
+
+stages:
+  - build
+
+variables:
+  GLOBAL_VAR: "global_value"
+
+build:
+  stage: build
+  script:
+    - echo "Running build with $GLOBAL_VAR"
+
+
+#############################################################################################################
+
+######################   below is the pipeline if you want to trigger another pipeline in different gitlab project not on same project
+############# you can use this below downstream pipeline steps to configure the pipeline and also you can overide the variables in pipeline by passing varaibles 
+
+
+stages:
+  - trigger
+
+trigger_job:             ######### downstream pipeline is a pipeline in which you trigger another pipeline in different project with branch name
+  stage: trigger
+  variables:
+    NEW_VAR: "value that can be modified"
+  trigger:
+    project: mowais12/mytrigger       
+    branch: main
+    strategy: depend            ### it will wait to complete the trigger pipeline first  and then will complete its own pipeline
+
+
+
+
+#########################################################################################
+
+########### in case you want to trigger pipeline  from same repo or different repo you can use this approach below by passing the api with varaibles and branch name
+######## you need project ID to pass in api
+
+stages:
+  - build
+
+variables:
+  NEW_VAR: "value"
+
+build:
+  stage: build
+  script:
+    - echo "third pipeline $NEW_VAR"
+    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=new-branch  --form "variables[GLOBAL_VAR]=testing value can be added" "https://gitlab.com/api/v4/projects/72220019/trigger/pipeline"
+
+
+
+################################################################################
+############ below is the common pipeline that is using workflow to trigger on specific branch on commit
+
+
+workflow:                      ### worflow make ease to run every stage and job on new-branch commit
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "new-branch"'
+      when: always
+stages:
+  - build
+  - testing
+variables:
+  GLOBAL_VAR: "global_value"
+new_build:
+  stage: build
+  script:
+    - echo "Running build with $GLOBAL_VAR"
+new_service:
+  stage: testing
+  script:
+    - echo "hello"
+
+
+
+
+
+##########################################################
+
+
+
+# .gitlab-ci.yml  trigger to call the template on folder change in mono repo directory
+# Below is the code for new gitlab ci
+
+trigger_job:
+  trigger:
+    include:
+      - local: 'ci/test-gitlab-ci.yaml'
+  rules:
+    - changes:
+        paths:
+          - tree/**  # This triggers when files inside 'tree/' change
+
+
+trigger-new-micro-ci:
+  trigger:
+    include:
+      - local: 'ci/new-micro-ci.yaml'
+  rules:
+    - changes:
+        paths:
+          - new/**  # Trigger this job when files inside the 'new/' directory change
+
+
+
+
+
+####################################
+######################## below is the common pipeline in case you want to run before and after script  and use artifact
+############# also below is how to use agent ############
+
+
+
+
+
+before_script:
+  - echo "before"
+
+after_script:
+  - echo "after"
+
+build-job:
+  stage: build # Assign the job to a stage
+  script:
+    - echo "hello-world" # Indented script command
+    - mkdir dist # Create a dummy 'dist' folder for demonstration
+    - echo "My application code" > dist/app.txt
+    - echo "Build log content" > build.log
+  artifacts:
+    paths:
+      - dist/
+      - build.log
+    expire_in: "1 week"
+
+
+test-job:
+  stage: test # Assign the job to a stage
+  needs:
+    - build-job
+  script:
+    - echo "hello-world" # Indented script command
+    - pwd
+    - cat dist/app.txt
+    - echo $CI_DEFAULT_BRANCH
+
+
+python-job:
+  stage: deploy
+  image: python:latest
+  script:
+    - python test.py
+
+vm-test-job:
+  stage: deploy
+  tags:
+    - linux-myvm1  ###### self hosted runner need to define tag in that
+  script:
+    - echo "heelo"
+
+
+
+
+###############################
+#######################
+
+################################################################################## old gitlab pipeline below
+
+
+
+stages:
+  - build
+  - dockerize
+  - deploy
+
+variables:
+  COMMIT_SHA: "$CI_COMMIT_SHORT_SHA"
+  IMAGE_NAME_AUTH: "xxxxx/auth"
+  IMAGE_NAME_DISCOVERY: "xxxxxxxxxxxx/discovery"
+
+
+before_script:
+  - echo "Running on GitLab CI..."
+  - echo "Java version:" && java -version
+  - echo "Docker version:" && docker --version
+  - echo "Azure CLI version:" && az version
+  - az login --identity --client-id "$DEV_USER_ID"
+  - az acr login --name xxxxxxxxxxx
+
+# Build job for AUTH service: Only triggered when files in 'auth/' change
+build-service-auth:
+  stage: build
+  tags:
+    - self-hosted-onp
+  script:
+    - echo "JDK 17 verification"
+    - java -version
+    - ./gradlew :auth:bootjar
+    - ls -l auth/build/libs
+  artifacts:
+    paths:
+      - auth/build/libs/*.jar
+  only:
+    changes:
+      - auth/**/*
+
+# Dockerize and Push job for AUTH service: Only triggered when files in 'auth/' change
+dockerize-and-push-auth:
+  stage: dockerize
+  tags:
+    - self-hosted-onp
+  script:
+    - docker pull openjdk:17-alpine
+    - cd auth
+    - echo "PWD $(pwd)"
+    - echo "WHO AM I $(whoami)"
+    - docker build -t $IMAGE_NAME_AUTH:$COMMIT_SHA .
+    - docker push $IMAGE_NAME_AUTH:$COMMIT_SHA
+  only:
+    changes:
+      - auth/**/*
+
+# Deploy job for AUTH service
+deploy-service-auth:
+  stage: deploy
+  tags:
+    - self-hosted-onp
+  script:
+    - echo "Deploying AUTH to Azure AKS..."
+    - kubectl set image $DEPLOYMENT_AUTH auth-app=$IMAGE_NAME_AUTH:$COMMIT_SHA -n dev
+  only:
+    changes:
+      - auth/**/*
+
+######################## DISCOVERY service ########################
+
+# Build job for DISCOVERY service: Only triggered when files in 'discovery/' change
+build-service-discovery:
+  stage: build
+  tags:
+    - self-hosted-onp
+  script:
+    - echo "JDK 17 verification"
+    - java -version
+    - ./gradlew :discovery:bootjar
+    - ls -l discovery/build/libs
+  artifacts:
+    paths:
+      - discovery/build/libs/*.jar
+  only:
+    changes:
+      - discovery/**/*
+
+# Dockerize and Push job for DISCOVERY service: Only triggered when files in 'discovery/' change
+dockerize-and-push-discovery:
+  stage: dockerize
+  tags:
+    - self-hosted-onp
+  script:
+    - docker pull openjdk:17-alpine
+    - cd discovery
+    - echo "PWD $(pwd)"
+    - echo "WHO AM I $(whoami)"
+    - docker build -t $IMAGE_NAME_DISCOVERY:$COMMIT_SHA .
+    - docker push $IMAGE_NAME_DISCOVERY:$COMMIT_SHA
+  only:
+    changes:
+      - discovery/**/*
+
+# Deploy job for DISCOVERY service
+deploy-service-discovery:
+  stage: deploy
+  tags:
+    - self-hosted-onp
+  script:
+    - echo "Deploying DISCOVERY to Azure AKS..."
+    - kubectl set image $DEPLOYMENT_DISCOVERY discovery-app=$IMAGE_NAME_DISCOVERY:$COMMIT_SHA -n dev
+  only:
+    changes:
+      - discovery/**/*
+
+
+
+
+##################################################################################################################################################
+##################################################################################################################################################
+##################################################################################################################################################
