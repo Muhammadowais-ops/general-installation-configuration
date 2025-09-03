@@ -33,4 +33,16 @@ NAME                CLUSTER                         NAMESPACE  PROJECT  STATUS  
 argocd/testing-app  https://kubernetes.default.svc  default    default  Synced  Healthy  Auto-Prune  <none>      https://github.com/Muhammadowais-ops/kubernetes-and-helm.git  argocd-example  HEAD
 
 
+######## argocd ###########
+
+argocd repo for helm is there you can use that to configure with helm
+
+also you need to have argocd install and login to see the app which you configure in argocd
+
+
+you can use below command like 
+
+helm create test
+
+this will create helm chart for the application 
 
