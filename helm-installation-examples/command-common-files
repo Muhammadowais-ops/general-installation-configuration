@@ -1,0 +1,67 @@
+helm examples that we should know for troubleshooting and configuration
+
+######## how to create some default chart ###########
+
+helm create chartname     -----> it will create default chart with default values
+
+######## how to check chart #######
+
+helm lint foldername   ----> name of the folder in which we have chart
+helm template foldername -----> it will display the chart in the with deployments in order
+
+
+##########  helm hooks that we should know ###########
+
+pre-install	Executes after templates are rendered, but before any resources are created in Kubernetes
+post-install	Executes after all resources are loaded into Kubernetes
+pre-delete	Executes on a deletion request before any resources are deleted from Kubernetes
+post-delete	Executes on a deletion request after all of the release's resources have been deleted
+pre-upgrade	Executes on an upgrade request after templates are rendered, but before any resources are updated
+post-upgrade	Executes on an upgrade request after all resources have been upgraded
+pre-rollback	Executes on a rollback request after templates are rendered, but before any resources are rolled back
+post-rollback	Executes on a rollback request after all resources have been modified
+
+
+before-hook-creation	Delete the previous resource before a new hook is launched (default)
+hook-succeeded	Delete the resource after the hook is successfully executed
+hook-failed	Delete the resource if the hook failed during execution
+
+
+
+############   below is the example of hooks ###########
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pre-install-job
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-7"       ----> negative value should have higher priority
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+        - name: busybox
+          image: busybox
+          command: ["echo", "Running pre-install or pre-upgrade task"]
+      restartPolicy: Never
+
+
+################ helm common functions 
+
+
+helm include function ----> use to call the template which are commonly define in the _helpers_tpl file 
+helm required function ----> it will print required if the values has error 
+helm quote   --------->    it will use for double quotes
+
+######################
+
+
+#############  below are the examples of some helms ###############
+
+
+
+
+
+
