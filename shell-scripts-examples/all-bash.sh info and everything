@@ -125,3 +125,20 @@ hello
 and we ?!/aded/e[
 
 comment
+
+## set -e  stand for exit 
+### Pipeline failure detection
+
+#This option ensures that the entire pipeline fails if any command within the pipeline fails. Normally, only the exit status of the last command in the pipeline is considered, but with pipefail, the exit status of the whole pipeline is determined by the first command that fails.
+
+# -u stand for undefined variable
+
+# set -eou pipefail
+set +eo pipefail
+pwd | cast filename | ls -ltr   ### here it will run below commands
+
+echo "nope"
+set -eo pipefail
+pwd | cast filename | ls -ltr ### here it will exit because cast is not a command so ls -ltr will not run 
+
+echo "yes"
