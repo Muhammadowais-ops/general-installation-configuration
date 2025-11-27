@@ -98,3 +98,25 @@ echo "abcing "
 abc=${MYVAR:-0}
 cde=${MYK:-"abcmde"}
 echo $abc $cde
+
+
+#In Bash, the set -o noglob command disables filename expansion (globbing), which is normally used to match files or directories based on wildcard characters (like *, ?, and []).
+
+set -o noglob
+
+cat 1*filename.txt        ## let's say if there are two files one file is 1*filename.txt and other file is 1filename.txt default behvaoiur of bash will use specical character and in the last you see both are going to print 
+
+
+set +o noglob
+
+cat 1*filename.txt
+
+
+#below is the multi lin comment
+
+<<comment
+this is the multi line
+hello
+and we ?!/aded/e[
+
+comment
