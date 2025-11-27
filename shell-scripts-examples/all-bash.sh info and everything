@@ -32,6 +32,28 @@ for d in $@; do  # ### Loop through all arguments in $@ ###
   fi  # ### End of conditional block ###
 done  # ### End of for loop ###
 
+
+
+test () {
+  for k in "$@"; do
+    case $k in
+      -t=*|--ot=*)
+        echo "print"
+        ;;
+      -flp=*)
+	 echo "${k#*=}"   # IT WILL REMOVE value if -flp=test/mynt  so it will be flp test/mynt   and if -flp=/test/mny so if will till first value after that /test/mny
+	 echo "${k#*/}"
+	 ;;
+      *)
+        echo "nothing match case"
+        ;;
+    esac
+  done
+}
+
+
+test $@
+
 # ### Shift the positional parameters by 2 ###
 shift 2  # ### Remove the first 2 arguments, shifting the remaining ones to the left ###
 # ### End of shift ###
@@ -70,3 +92,9 @@ info $1  # ### Call the function 'info' with the first argument passed to the sc
 
 #The square brackets are part of the ANSI escape sequence format:
 echo "abcing "
+
+
+#MYVAR="testing"    #${MYVAR:-DEFAULT} is a way to assign a variable in Bash where you specify a default value (DEFAULT) to be used if the variable (VAR) is not set or is empty
+abc=${MYVAR:-0}
+cde=${MYK:-"abcmde"}
+echo $abc $cde
