@@ -1,0 +1,72 @@
+# ### Begin Script ###
+
+#! /bin/bash  # ### Define the shell interpreter (bash) ###
+# ### End of Script Header ###
+
+# ### Print a greeting with the value of $a ###
+echo "hello $a"  # ### Display the value of variable 'a' (currently uninitialized) ###
+# ### End of greeting ###
+
+# ### Assign value to variable 'a' ###
+a="he"  # ### Assign 'he' to the variable 'a' ###
+# ### End of assignment ###
+
+# ### Print the value of 'a' followed by 'n' ###
+echo "$a n"  # ### Print 'he n' because 'a' is 'he' ###
+# ### End of print ###
+
+# ### Print the values of 'a', first argument, all arguments, and argument count ###
+echo $a $1 $@ $#  # ### Print variable 'a', first argument, all arguments, and the argument count ###
+# ### End of print ###
+
+# ### Loop through all arguments passed to the script ###
+for d in $@; do  # ### Loop through all arguments in $@ ###
+  # ### Conditional check for argument value ###
+  if [[ $d == "he" ]]; then  # ### If the argument is "he" ###
+    echo "no"  # ### Print "no" ###
+  elif [[ $d == "abc" ]]; then  # ### If the argument is "abc" ###
+    echo "na"  # ### Print "na" ###
+    break  # ### Exit the loop after "abc" is found ###
+  else  # ### If the argument is neither "he" nor "abc" ###
+    echo "nothing"  # ### Print "nothing" ###
+  fi  # ### End of conditional block ###
+done  # ### End of for loop ###
+
+# ### Shift the positional parameters by 2 ###
+shift 2  # ### Remove the first 2 arguments, shifting the remaining ones to the left ###
+# ### End of shift ###
+
+# ### Print all remaining arguments after the shift ###
+echo $@  # ### Print all remaining arguments ###
+# ### End of print ###
+
+# ### Define the info function ###
+info () {  # ### Define a function named 'info' that takes a parameter ###
+  # ### Print the first argument ($1) with some formatting and color ###
+  printf "\n \n \e[1;3;37;44m --- $1 --- \e[0m\n \n "  # ### Output the argument $1 with blue background and white bold text ###
+  # ### End of info function ###
+}
+
+# \n represents a newline character.
+# \e or \033: This is an escape sequence that tells the terminal that formatting is about to be applied.
+# [1;3;37;44m: This specifies the style and colors of the text
+
+# 1: Makes the text bold 
+# 3: Enables underline for the text.
+# 37: Sets the text color to white.
+# 44: Sets the background color to blue
+#\e[0m: #This escape sequence resets any previously applied formatting. It ensures that the formatting (such as bold and colors) only affects this part of the output, and after that, the terminal formatting will revert to defa)ult
+
+
+
+# ### Call the 'info' function, passing the first argument to it ###
+info $1  # ### Call the function 'info' with the first argument passed to the script ###
+# ### End of function call ###
+
+# ### End of Script ###
+#The reset escape code \e[0m (or \033[0m) serves to reset all the formatting applied by previous escape sequences. Without this reset, the terminal will continue using the bold, underlined, and colored styles for all subsequent text until the terminal is closed or reset.
+
+#Why Use Brackets ([ ])?
+
+#The square brackets are part of the ANSI escape sequence format:
+echo "abcing "
