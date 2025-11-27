@@ -37,11 +37,16 @@ done  # ### End of for loop ###
 test () {
   for k in "$@"; do
     case $k in
-      -t=*|--ot=*)
+      -t=*|--ot=*)			# means bash expansion
         echo "print"
         ;;
       -flp=*)
 	 echo "${k#*=}"   # IT WILL REMOVE value if -flp=test/mynt  so it will be flp test/mynt   and if -flp=/test/mny so if will till first value after that /test/mny
+	 			# so understand # means short remove from the beginning
+			## longest remove from the begining %% longest from the end % long ? means one character 
+#				var="file1"
+#echo ${var//{1,2}/3}  # Output: file3
+
 	 echo "${k#*/}"
 	 ;;
       *)
