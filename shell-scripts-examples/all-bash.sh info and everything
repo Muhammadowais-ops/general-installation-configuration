@@ -142,3 +142,17 @@ set -eo pipefail
 pwd | cast filename | ls -ltr ### here it will exit because cast is not a command so ls -ltr will not run 
 
 echo "yes"
+
+
+
+#!/usr/bin/env bash   ### env searches for the interpreter in the user’s PATH instead of using a hard-coded path.
+
+<<comment
+because on some systems (macOS, FreeBSD, Linux from scratch):
+
+bash might be in /usr/local/bin/bash
+
+bash might not be in /bin/bash
+
+user may use a custom bash from a different location
+comment
