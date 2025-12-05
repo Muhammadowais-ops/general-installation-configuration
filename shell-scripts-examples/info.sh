@@ -111,4 +111,7 @@ fi
 
 comment
 
+if [ ! -s "apis_list.json" ]
+-s: This is a test operator in Bash that checks whether a file exists and has a non-zero size (i.e., the file is not empty).
+
 
