@@ -1,0 +1,116 @@
+Terms used in AWK
+
+NR - No. of record/row
+NF - No. of fields
+
+$0 - Print everything
+$1, $2 - Field no.
+
+## to display all things in file
+
+awk '{print $0}' new.txt 
+
+Example 2: Print the first column
+awk '{ print $1 }' file.txt
+
+
+Example 3: Change field separator
+awk -F, '{ print $1 }' file.csv
+
+
+This sets the field separator to a comma (,), useful for CSV files.
+
+
+Search for a word in file
+
+awk ‘/word/ {print $2}' file
+
+
+Print only given line no.
+
+awk ‘NR==5 {print $0}' file
+
+
+Print line with each row
+
+awk ‘{NR print $0}' file
+
+
+Search for multiple words in file
+
+awk ‘/word1|word2/ {print $2}' file
+
+
+Print range of lines from a file
+
+awk ‘{NR==3, NR==6 print $0}' file
+
+
+Get the empty lines
+
+awk ‘NF==0 {print NR}' file
+
+Print data of employees, salary > 50000
+
+awk -F, ‘$NF>50000’ file
+
+
+Replacing a word in a file
+
+awk -F, ‘{gsub(“from“, “to“) print $0} file’
+
+
+
+Print index/position of a given word
+
+echo "Hi Paul" | awk '{print index($0, "Paul")}'
+
+
+
+Get length of a word/row
+
+echo "Hi Paul" | awk '{print length($2)}'
+
+
+
+
+Split the words in a row in an array
+
+awk -F, ‘{split($0, arr, “,“); print arr[1]} file’
+
+
+
+
+
+
+
+
+Find sum/total salary
+
+awk -F, ‘{sum+=$NF} END{print sum}' file
+
+
+
+Find average salary
+
+awk -F, ‘{sum+=$NF} END{print sum/NR}' file
+
+Incase you want to do something before file start and end
+
+awk -F, 'BEGIN { print "Start of Report"; print "--------------" } {print NR} END {"hello ending"}' new.txt 
+
+
+
+Print the length of value
+awk -F, ' {print length ($NF)}' new.txt 
+
+
+Use if else condition to fetch and perform specific actions using awk
+
+awk -F, '{if ($NF > 400) {print "Hey these are values", $NF} else if ($NF == 0) {print "Other values", $NF} }' new.txt
+
+Using awk as a for loop to go through to every word in a file and perform actions
+
+awk -F, '{ for(i=1;i<NF;i++) if ( $i== "abc") {print "checking i value" $i} }' new.txt 
+
+awk -F, '{ for(i=1;i<NF;i++) if ( $i== 2) {print "checking i value" ($i+2)} }' new.txt 
