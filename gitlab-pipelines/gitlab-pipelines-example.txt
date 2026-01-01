@@ -293,3 +293,16 @@ deploy-service-discovery:
 ##################################################################################################################################################
 ##################################################################################################################################################
 ##################################################################################################################################################
+
+
+
+
+
+
+
+
+####### you can create gitlab template file in different repo mention in another repo to use a resuable template #########################
+include:
+  project: test/ci/myrepo/ci-newfile                          ---> repo name with path 
+  file: ${CI_PROJECT_PATH}/.gitlab-ci.yml                       ---> create same project path in your repo to use a resuable template
+  ref: Branch-name
