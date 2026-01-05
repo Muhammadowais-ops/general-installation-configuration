@@ -35,5 +35,33 @@ sample data we can play
 }
 
 
+### it will print data in pretty json format #####3
+cat test.json | jq '.'
+
+##### how to select values in json ########
+
+cat test.json | jq '.employees'
+
+cat test.json | jq '.employees[2]'
+
+cat test.json | jq '.employees[2:4]'
+
+### to select from employees id values ######
+
+cat test.json | jq '.employees[].id'
+
+### to select multiple values ######
+
+cat test.json | jq '.employees[]| {id,name}'
+
+### you can use select as condition to select specific value not in this above command output not return as array
+
+cat test.json | jq '.employees[].id | select (. == 1)'
+
+### incase output return as array you can use map 
+
+cat test.json | jq '.employees[]| {id,name}| map(select (. == 1))'
+
+
 
 
