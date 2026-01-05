@@ -78,3 +78,18 @@ cat test.json | jq '.employees | map(has("name"))'
 
 ###
 cat test.json | jq '.employees[].skills | map(select(. == "recruitment"))'
+## you can also convert below output to json data format
+
+[root@ip-172-31-71-114 ec2-user]# cat test.json | jq '.employees[].id'
+1
+2
+3
+4
+[root@ip-172-31-71-114 ec2-user]# cat test.json | jq '[.employees[].id]'
+[
+  1,
+  2,
+  3,
+  4
+]
+
