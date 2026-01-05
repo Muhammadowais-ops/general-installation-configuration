@@ -101,3 +101,16 @@ false
 1
 [root@ip-172-31-71-114 ec2-user]# 
 
+
+
+### you can get the required json output and save into another json file #########
+
+
+cat test.sh 
+#!/bin/bash
+
+# Read the skills from the JSON file and store them in a variable
+TESTM=$(jq "[.employees[] | {id,name}]" test.json)
+
+# Use --argjson to pass the JSON value into jq
+jq -n --argjson skills "$TESTM" '{skills: $skills}' > new.json
