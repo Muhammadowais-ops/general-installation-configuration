@@ -65,3 +65,4 @@ cat test.json | jq '.employees[]| {id,name}| map(select (. == 1))'
 
 
 
+
