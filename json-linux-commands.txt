@@ -114,3 +114,12 @@ TESTM=$(jq "[.employees[] | {id,name}]" test.json)
 
 # Use --argjson to pass the JSON value into jq
 jq -n --argjson skills "$TESTM" '{skills: $skills}' > new.json
+
+--arg is used to pass a string value from the shell into jq as a variable.
+
+name="Alice"
+cat test.json | jq --arg name "$name" '.employees[] | select(.name == $name)
+
+--arg name "$name": This passes the shell variable $name (which is "Alice") into the jq filter as the variable $name.
+
+.employees[] | select(.name == $name): Filters through the employees and selects the one whose name matches the value passed by $name.
