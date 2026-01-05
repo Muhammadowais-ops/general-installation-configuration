@@ -62,7 +62,19 @@ cat test.json | jq '.employees[].id | select (. == 1)'
 
 cat test.json | jq '.employees[]| {id,name}| map(select (. == 1))'
 
+## select from multiple value
+cat test.json | jq '.employees[] | {id, name} | select(.name == "Alice")'
+
+### incase you don't want a string you can use -r to remove it 
+
+cat test.json | jq -r '.employees[].name'
+
+#######  you can use any if output return with true and false
+cat test.json | jq '.employees[] | {id, name} | select(.name == "Alice")| any'
+
+### object has the key ######
+cat test.json | jq '.employees | map(has("name"))'
 
 
-
-
+###
+cat test.json | jq '.employees[].skills | map(select(. == "recruitment"))'
