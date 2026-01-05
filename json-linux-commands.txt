@@ -93,3 +93,11 @@ cat test.json | jq '.employees[].skills | map(select(. == "recruitment"))'
   4
 ]
 
+The -e option does not automatically make the command exit on failure (like exit 1 or similar behavior). It only sets the exit status based on the result of the jq filter. You can capture this exit status in a shell script or check it using $?.
+
+[root@ip-172-31-71-114 ec2-user]# jq -e 'length < 0' test.json 
+false
+[root@ip-172-31-71-114 ec2-user]# echo $?
+1
+[root@ip-172-31-71-114 ec2-user]# 
+
