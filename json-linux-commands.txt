@@ -1,0 +1,39 @@
+############# these are the jq commands we can use for json file parsing in linux ################
+sample data we can play
+
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "age": 30,
+      "department": "HR",
+      "skills": ["communication", "management"]
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "age": 25,
+      "department": "Engineering",
+      "skills": ["programming", "problem-solving"]
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 35,
+      "department": "Engineering",
+      "skills": ["design", "leadership"]
+    },
+    {
+      "id": 4,
+      "name": "David",
+      "age": 28,
+      "department": "HR",
+      "skills": ["recruitment", "communication"]
+    }
+  ]
+}
+
+
+
+
