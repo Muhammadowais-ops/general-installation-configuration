@@ -31,3 +31,101 @@ screen -r ----> reattach session
 screen -ls  ----> List all running screen sessions:
 screen -r session-name ----> to reattach that session
 ctrl + a, then d   ---> to detattach the session
+
+
+
+
+
+
+vim/vi editor
+
+
+0 - jump to the start of the line
+
+$ - jump to the end of the line
+
+gg - go to the first line of the document
+G - go to the last line of the document
+
+} - jump to next paragraph (or function/block, when editing code)
+{ - jump to previous paragraph (or function/block, when editing code)
+
+e press in the linux to go to next character
+b press in the linux to go to end character
+
+dd to deleting
+:%d delete all things
+dG will delete all lines from where you stand
+yy copy
+p paste
+
+
+to copy in Visual press v then select the lines you want to copy
+after that then
+press y to copy and then p for paste
+
+
+copy and replace in vim
+
+:%s/word/new-word/g
+
+add multiple comment in vim
+
+
+:[start line],[end line]s/^/#
+
+how to uncomment multiple lines
+
+:%s/^#/
+
+
+/word   search from top of file
+
+?word    search from bottom of the file
+
+gg go to top of the file
+
+G go to end of the file
+
+w go to word by word
+
+b go to backword word by word
+
+dd to delete lines
+
+yy to copy 
+
+3yy yo copy 3 lines
+
+
+
+vim +8092 catalina.out    open the file from specified line
+
+:linenumber              go to that line
+
+:set number
+
+:set nonumber
+
+:set ignorecase
+
+
+search for whole word with space
+/\<your_exact_word\>
+
+Visual mode 
+
+use v and y for copy
+
+
+:%s/old/new/g - replace all old with new throughout file
+:%s/old/new/gc - replace all old with new throughout file with confirmations
+:noh[lsearch] - remove highlighting of search
+search for whole word with space
+/\<your_exact_word\>
+
+
+
+
+
+
