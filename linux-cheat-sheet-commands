@@ -12,8 +12,16 @@ ctrl b d --> to detach the session
 ctrl b % ----> split the windows in multiple tabs
 ctrl b q ----> to display the split windows number
 ctrl b q 1 -----> give number to jump to that session
+Resize Panes in tmux :
+Press Ctrl + b, then press : to bring up the command prompt.
 
+Resize down: resize-pane -D (for moving the border down)
 
+Resize up: resize-pane -U (for moving the border up)
+
+Resize left: resize-pane -L (for moving the border left)
+
+Resize right: resize-pane -R (for moving the border right)
 
 
 screen ----> in old linux
