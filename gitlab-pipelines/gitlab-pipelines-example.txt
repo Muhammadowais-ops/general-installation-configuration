@@ -176,116 +176,28 @@ vm-test-job:
 
 
 
-stages:
-  - build
-  - dockerize
-  - deploy
-
-variables:
-  COMMIT_SHA: "$CI_COMMIT_SHORT_SHA"
-  IMAGE_NAME_AUTH: "xxxxx/auth"
-  IMAGE_NAME_DISCOVERY: "xxxxxxxxxxxx/discovery"
-
-
 before_script:
   - echo "Running on GitLab CI..."
   - echo "Java version:" && java -version
-  - echo "Docker version:" && docker --version
-  - echo "Azure CLI version:" && az version
-  - az login --identity --client-id "$DEV_USER_ID"
-  - az acr login --name xxxxxxxxxxx
 
-# Build job for AUTH service: Only triggered when files in 'auth/' change
+# how to run job for specific folder changes in old gitlab
 build-service-auth:
   stage: build
   tags:
-    - self-hosted-onp
+    - testing-project
   script:
-    - echo "JDK 17 verification"
     - java -version
-    - ./gradlew :auth:bootjar
-    - ls -l auth/build/libs
+    - ./gradlew :test:bootjar
   artifacts:
     paths:
-      - auth/build/libs/*.jar
+      - test/build/libs/*.jar
   only:
     changes:
-      - auth/**/*
+      - test/**/*
 
-# Dockerize and Push job for AUTH service: Only triggered when files in 'auth/' change
-dockerize-and-push-auth:
-  stage: dockerize
-  tags:
-    - self-hosted-onp
-  script:
-    - docker pull openjdk:17-alpine
-    - cd auth
-    - echo "PWD $(pwd)"
-    - echo "WHO AM I $(whoami)"
-    - docker build -t $IMAGE_NAME_AUTH:$COMMIT_SHA .
-    - docker push $IMAGE_NAME_AUTH:$COMMIT_SHA
-  only:
-    changes:
-      - auth/**/*
 
-# Deploy job for AUTH service
-deploy-service-auth:
-  stage: deploy
-  tags:
-    - self-hosted-onp
-  script:
-    - echo "Deploying AUTH to Azure AKS..."
-    - kubectl set image $DEPLOYMENT_AUTH auth-app=$IMAGE_NAME_AUTH:$COMMIT_SHA -n dev
-  only:
-    changes:
-      - auth/**/*
 
-######################## DISCOVERY service ########################
 
-# Build job for DISCOVERY service: Only triggered when files in 'discovery/' change
-build-service-discovery:
-  stage: build
-  tags:
-    - self-hosted-onp
-  script:
-    - echo "JDK 17 verification"
-    - java -version
-    - ./gradlew :discovery:bootjar
-    - ls -l discovery/build/libs
-  artifacts:
-    paths:
-      - discovery/build/libs/*.jar
-  only:
-    changes:
-      - discovery/**/*
-
-# Dockerize and Push job for DISCOVERY service: Only triggered when files in 'discovery/' change
-dockerize-and-push-discovery:
-  stage: dockerize
-  tags:
-    - self-hosted-onp
-  script:
-    - docker pull openjdk:17-alpine
-    - cd discovery
-    - echo "PWD $(pwd)"
-    - echo "WHO AM I $(whoami)"
-    - docker build -t $IMAGE_NAME_DISCOVERY:$COMMIT_SHA .
-    - docker push $IMAGE_NAME_DISCOVERY:$COMMIT_SHA
-  only:
-    changes:
-      - discovery/**/*
-
-# Deploy job for DISCOVERY service
-deploy-service-discovery:
-  stage: deploy
-  tags:
-    - self-hosted-onp
-  script:
-    - echo "Deploying DISCOVERY to Azure AKS..."
-    - kubectl set image $DEPLOYMENT_DISCOVERY discovery-app=$IMAGE_NAME_DISCOVERY:$COMMIT_SHA -n dev
-  only:
-    changes:
-      - discovery/**/*
 
 
 
