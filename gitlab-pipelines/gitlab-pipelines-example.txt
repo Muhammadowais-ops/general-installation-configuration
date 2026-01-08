@@ -181,7 +181,7 @@ before_script:
   - echo "Java version:" && java -version
 
 # how to run job for specific folder changes in old gitlab
-build-service-auth:
+test-java-project:
   stage: build
   tags:
     - testing-project
