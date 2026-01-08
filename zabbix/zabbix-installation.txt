@@ -25,7 +25,7 @@ dnf install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-s
 mysql -uroot -p
 password
 mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
-mysql> create user zabbix@localhost identified by 'Db-*v3o0%brd';
+mysql> create user zabbix@localhost identified by 'xxxxxx';    -----> put your password according to your need 
 mysql> grant all privileges on zabbix.* to zabbix@localhost;
 mysql> set global log_bin_trust_function_creators = 1;
 mysql> quit;
