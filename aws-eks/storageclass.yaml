@@ -4,6 +4,6 @@ metadata:
   name: auto-ebs-sc
 provisioner: ebs.csi.eks.amazonaws.com
 volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
 parameters:
   type: gp2
-  AllowVolumeExpansion: "true"
