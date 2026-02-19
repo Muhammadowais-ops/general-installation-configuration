@@ -1,0 +1,18 @@
+gitlabUrl: "https://gitlab.com"
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+
+runners:
+  executor: kubernetes
+  config: |
+    [[runners]]
+      request_concurrency = 4
+      environment = ["FF_USE_ADAPTIVE_REQUEST_CONCURRENCY=true"]
+      [runners.kubernetes]
+        namespace = "gitlab-runners"
+        image = "alpine:3.19"
+

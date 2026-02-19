@@ -1,0 +1,25 @@
+####### you can configure gitlab runner this way ##########
+
+
+helm repo add gitlab https://charts.gitlab.io
+helm search repo -l gitlab/gitlab-runner
+helm repo update gitlab
+
+helm install --namespace gitlab-runners --create-namespace gitlab-runner gitlab/gitlab-runner \
+  --set gitlabUrl="https://gitlab.com" \
+  --set runnerToken="" \
+  --set rbac.create=true \
+  --set serviceAccount.create=true  
+
+
+
+###### or you can more variables and update config.toml with values.yaml and deploy like this ############
+
+
+helm install -n gitlab-runners --create-namespace gitlab-runner gitlab/gitlab-runner -f values.yaml --set runnerToken=""
+
+
+
+######### in case you want to upgrade just use helm upgrade #############
+
+helm upgrade -n gitlab-runners --create-namespace gitlab-runner gitlab/gitlab-runner -f values.yaml --set runnerToken=""
