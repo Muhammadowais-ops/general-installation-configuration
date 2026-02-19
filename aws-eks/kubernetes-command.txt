@@ -1,1 +1,3 @@
 kubectl config set-context --current --namespace="provide value"
+
+kubectl get secret secret-basic-auth  -o jsonpath='{.data.<provide key>}' | base64 --decode; echo    ========> like jsonpath='{.data.password}'
