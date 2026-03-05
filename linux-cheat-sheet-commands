@@ -8,7 +8,7 @@ tmux  ----> create new session
 tmux a    ---> attach session
 tmux list-sesssions   -----> list session that are running
 tmux a -t 0 ---->    tmux attach the session
-ctrl b d --> to detach the session
+ctrl + b d --> to detach the session
 ctrl b % ----> split the windows in multiple tabs
 ctrl b q ----> to display the split windows number
 ctrl b q 1 -----> give number to jump to that session
