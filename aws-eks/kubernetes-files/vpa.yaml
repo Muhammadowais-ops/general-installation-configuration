@@ -1,0 +1,9 @@
+##### below is the url link for vpa configuration on amazon eks ##########
+
+https://docs.aws.amazon.com/eks/latest/userguide/vertical-pod-autoscaler.html
+
+
+git clone https://github.com/kubernetes/autoscaler.git
+cd autoscaler/vertical-pod-autoscaler/
+./hack/vpa-up.sh
+kubectl apply -f examples/hamster.yaml
