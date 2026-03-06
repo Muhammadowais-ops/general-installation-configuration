@@ -125,7 +125,7 @@ search for whole word with space
 /\<your_exact_word\>
 
 
-##### aws disk size increase
+##### aws disk size increase ------------------------------------------
 
 ext4
 
@@ -147,7 +147,11 @@ sudo yum install xfsprogs
 [ec2-user ~]$ sudo xfs_growfs -d /data
 
 
+############ azure disk increase -----------------------------------------------
 
+lsblk
+growpart /dev/sda 2
+xfs_growfs -d /dev/sda2
 
 ###### php common commands after deployment can be run --------------------> also composer is included
 
