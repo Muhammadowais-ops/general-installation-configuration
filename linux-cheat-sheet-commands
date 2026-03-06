@@ -232,3 +232,42 @@ swapon --show
 
 
 
+
+
+
+########## lvm for orcale disk ------------------------------
+
+sudo dnf install cloud-utils-growpart
+sudo growpart /dev/sda 2
+sudo pvresize /dev/sda2
+sudo lvextend -l +100%FREE /dev/mapper/rootvg-rootlv
+sudo xfs_growfs /dev/mapper/rootvg-rootlv
+
+
+
+
+
+
+
+
+######### mongo dump and commands   ----------------------
+
+how to login into mongo database from cmd line
+
+mongo -u xxxx -p xxxxx --authenticationDatabase admin
+
+---- common commands ----
+
+show dbs
+
+db.createUser({user : 'xxxxxx', pwd : 'xxxxx', roles : ['readWrite']})
+db.createUser({user: "xxx",pwd: "xxxx",roles: [ "userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase"]});     ---> for clusteradmin
+
+
+mongodump --host xxxx --port 10255 -u xxxx -p xxxx -d dbname -o dbname.dump --ssl --sslAllowInvalidCertificates --tlsInsecure 
+mongodump --host xxxxxx --authenticationDatabase admin -u xxxx -p xxxx --db dbname -o dbname.dump       ---> common dump command
+
+
+
+mongodump --authenticationDatabase admin -d dbname -u xxxx -p xxxxx --host xxxx -o dbname.dump --excludeCollection collectionname --excludeCollection collectioname      --> if exclude collection during dump
+
