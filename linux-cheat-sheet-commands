@@ -24,6 +24,9 @@ Resize left: resize-pane -L (for moving the border left)
 Resize right: resize-pane -R (for moving the border right)
 
 
+
+
+
 ######## screen -----------------------------> in old linux
 
 screen ----> create new session
@@ -125,6 +128,13 @@ search for whole word with space
 /\<your_exact_word\>
 
 
+
+
+
+
+
+
+
 ##### aws disk size increase ------------------------------------------
 
 ext4
@@ -147,11 +157,30 @@ sudo yum install xfsprogs
 [ec2-user ~]$ sudo xfs_growfs -d /data
 
 
+
+
+
+
+
+
+
 ############ azure disk increase -----------------------------------------------
 
 lsblk
 growpart /dev/sda 2
 xfs_growfs -d /dev/sda2
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###### php common commands after deployment can be run --------------------> also composer is included
 
@@ -301,7 +330,10 @@ kill id;
 ###########   mysql schema count
 SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'dbName';
 
+SELECT @@global.time_zone, @@session.time_zone; check time zone
 
+
+ SELECT NOW(); check current time
 ######### binlog values
 
 SHOW VARIABLES LIKE '%binlog_format%';
