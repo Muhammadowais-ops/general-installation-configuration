@@ -319,6 +319,14 @@ SELECT ID,USER,HOST,DB,COMMAND,TIME,STATE,INFO FROM INFORMATION_SCHEMA.PROCESSLI
 
 SHOW ENGINE INNODB STATUS;
 
+SELECT * FROM `information_schema`.`innodb_trx` ORDER BY `trx_started`;
+
+SHOW OPEN TABLES WHERE in_use>0;
+
+
+SELECT COUNT(*) AS total_stored_procedures FROM information_schema.ROUTINES WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_SCHEMA='dbname';
+SELECT COUNT(*) AS total_views FROM information_schema.TABLES WHERE TABLE_TYPE='VIEW' AND TABLE_SCHEMA='dbname';
+
 
 ####### check database table size
 SELECT TABLE_NAME AS `Table`, 
@@ -332,6 +340,44 @@ SELECT TABLE_NAME AS `Table`,
 FROM information_schema.TABLES 
 WHERE TABLE_SCHEMA = 'dbname' 
   AND TABLE_NAME = 'tablename';
+
+
+
+
+----- mysql dumps commands -----
+
+########### mysqldump ##########  without data
+mysqldump -uusername dbname --no-data > dbname.sql
+
+mysqldump -uusername dbname --no-data --skip-add-drop-table > dbname.sql
+
+mysqldump -h hostip -u username  -pxxxxxx -f --quick --routines --events dbname --result-file=dbname.sql
+
+
+
+
+
+
+
+########## postgres commands -----------------------------------------------------------
+
+use dbname then run below command
+
+select count(*) from information_schema.tables;
+
+
+------- terminate db sessions ----
+
+SELECT
+	pg_terminate_backend (pg_stat_activity.pid)
+FROM
+	pg_stat_activity
+WHERE
+	pg_stat_activity.datname = 'dbname';
+	
+	
+
+
 
 
 
