@@ -37,7 +37,7 @@ ctrl + a, then d   ---> to detattach the session
 
 
 
-vim/vi editor
+vim/vi -----------> editor
 
 
 0 - jump to the start of the line
@@ -123,6 +123,109 @@ use v and y for copy
 :noh[lsearch] - remove highlighting of search
 search for whole word with space
 /\<your_exact_word\>
+
+
+##### aws disk size increase
+
+ext4
+
+sudo growpart /dev/xvda 1
+sudo resize2fs /dev/xvda1
+
+
+ df -h
+Filesystem       Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   8.0G  1.6G  6.5G  20% /
+/dev/nvme1n1     8.0G   33M  8.0G   1% /data
+...
+
+[XFS file system] To extend the file system on each volume, use the xfs_growfs command. In this example, / and /data are the volume mount points shown in the output for df -h.
+
+sudo yum install xfsprogs
+
+[ec2-user ~]$ sudo xfs_growfs -d /
+[ec2-user ~]$ sudo xfs_growfs -d /data
+
+
+
+
+###### php common commands after deployment can be run --------------------> also composer is included
+
+php artisan config:clear
+php artisan config:cache
+php artisan cache:clear
+
+
+## check laravel framework
+php artisan --version
+
+composer install
+composer require grpc/grpc
+
+
+sudo composer require "grpc/grpc": "^1.38.0"
+composer update --ignore-platform-reqs
+
+
+
+
+
+
+
+
+
+
+
+######## linux shortcut commands -----------------------------
+
+
+
+Delete everything from the cursor to the end of the line:
+Ctrl + k
+
+
+
+Delete everything from the cursor to the start of the line:
+Ctrl + u
+
+
+Search your history backward. This is probably the one that I use the most. It is really handy and speeds up my work-flow a lot:
+Ctrl + r
+
+Clear the screen, I use this instead of typing the clear command:
+Ctrl + l
+
+
+Stops the output to the screen:
+Ctrl + s
+
+
+Enable the output to the screen in case that previously stopped by Ctrl + s:
+Ctrl + q
+
+
+Throw the current command to background:
+Ctrl + z
+
+
+
+
+
+
+
+
+
+
+######### increase swap size in linux this will increase existing swapspace  --------------------------------
+it will add existing swap to how much increasing you are
+
+
+sudo swapoff /swapfile
+sudo dd if=/dev/zero of=/swapfile bs=1G count=16 oflag=append conv=notrunc
+sudo mkswap /swapfile
+sudo swapon /swapfile
+swapon --show
+
 
 
 
