@@ -271,3 +271,65 @@ mongodump --host xxxxxx --authenticationDatabase admin -u xxxx -p xxxx --db dbna
 
 mongodump --authenticationDatabase admin -d dbname -u xxxx -p xxxxx --host xxxx -o dbname.dump --excludeCollection collectionname --excludeCollection collectioname      --> if exclude collection during dump
 
+
+
+
+
+
+
+
+
+
+
+
+
+###### mysql common commands --------------------------
+
+---- admin commands ----
+
+show full processlist;
+kill id;
+
+
+###########   mysql schema count
+SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'dbName';
+
+
+######### binlog values
+
+SHOW VARIABLES LIKE '%binlog_format%';
+
+---- check db size 
+
+SELECT
+  TABLE_SCHEMA AS `Database`,
+  TABLE_NAME AS `Table`,
+  ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024) AS `Size (MB)`
+FROM
+  information_schema.TABLES
+ORDER BY
+  (DATA_LENGTH + INDEX_LENGTH)
+DESC;
+
+####### mysql querys to check status for lock
+
+SELECT ID,USER,HOST,DB,COMMAND,TIME,STATE,INFO FROM INFORMATION_SCHEMA.PROCESSLIST WHERE COMMAND !='Sleep' AND TIME >= 1;
+
+---- check locks status
+
+SHOW ENGINE INNODB STATUS;
+
+
+####### check database table size
+SELECT TABLE_NAME AS `Table`, 
+       ROUND(((DATA_LENGTH + INDEX_LENGTH) /
+ 
+1024
+ 
+/
+ 
+1024), 2) AS `Size (MB)` 
+FROM information_schema.TABLES 
+WHERE TABLE_SCHEMA = 'dbname' 
+  AND TABLE_NAME = 'tablename';
+
