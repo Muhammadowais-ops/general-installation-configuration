@@ -271,6 +271,9 @@ mongodump --host xxxxxx --authenticationDatabase admin -u xxxx -p xxxx --db dbna
 
 mongodump --authenticationDatabase admin -d dbname -u xxxx -p xxxxx --host xxxx -o dbname.dump --excludeCollection collectionname --excludeCollection collectioname      --> if exclude collection during dump
 
+mongorestore -d dbname --authenticationDatabase admin -u admin -p xxxxx /filepath.dump/
+
+
 
 
 
