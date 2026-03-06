@@ -462,3 +462,34 @@ semanage port -a -t http_port_t  -p tcp 8090
 
 ##add for nginx
 semanage port -m -t http_port_t -p tcp 8200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######## important linux commands for troubleshooting --------------------------------------
+tcpdump for packet capturing
+
+### give interface and port to capture specific traffic
+
+tcpdump -i eth0 src src-ip
+tcpdump -i eth0 port give-port
