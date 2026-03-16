@@ -20,6 +20,10 @@ pipeline {
 
                     def uuid = thirdTestn.fetchuuid_ft()
                     echo "uuid: ${uuid}"
+                    
+                    def user2 = thirdTestn.logUse_over_rt()
+                    echo "return ${user2}"
+
                 }
             }
         }
