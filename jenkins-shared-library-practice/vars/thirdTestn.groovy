@@ -19,3 +19,9 @@ def fetchuuid_ft() {
     def helper = new ThirdTest(this)
     return helper.fetchuuid()
 }
+
+// below is the example of hardcode value
+def logUse_over_rt() {
+    def helper = new ThirdTest(this, [logname_user: 'abc'])
+    return helper.logUser()
+}
