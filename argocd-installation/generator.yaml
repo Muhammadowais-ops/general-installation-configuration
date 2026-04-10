@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook-app-test
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: testing-eks
+            appPath: guestbook
+  template:
+    metadata:
+      name: '{{cluster}}-guestbook'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Muhammadowais-ops/argocd-example-apps.git
+        targetRevision: HEAD
+        path: '{{appPath}}'
+      destination:
+        name: '{{cluster}}'
+        namespace: testing
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
