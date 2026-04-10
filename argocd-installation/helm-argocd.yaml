@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Muhammadowais-ops/argocd-example-apps.git
+    path: helm-guestbook
+    targetRevision: master
+    helm:
+      releaseName: helm-release
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sync-helm
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
