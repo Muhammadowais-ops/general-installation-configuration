@@ -1,23 +1,29 @@
-project: default
-source:
-  repoURL: https://github.com/Muhammadowais-ops/helm-argocd.git
-  path: test
-  targetRevision: main
-destination:
-  server: https://kubernetes.default.svc
-  namespace: mynamed
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    enabled: true
-  syncOptions:
-    - PrunePropagationPolicy=foreground           ######## you can ai to get all explaination of these values
-    - CreateNamespace=true
-    - Validate=false
-  retry:
-    limit: 2
-    backoff:
-      duration: 5s
-      factor: 2
-      maxDuration: 3m0s
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Muhammadowais-ops/helm-argocd.git
+    path: test
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mynamed
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - CreateNamespace=true
+      - Validate=false
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
