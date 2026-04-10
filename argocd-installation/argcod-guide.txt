@@ -31,6 +31,7 @@ argocd admin initial-password -n argocd
 
 ### configure argocd cli access ########
 
+argocd login argocd.example.com --username admin --password mypass --insecure
 
 argocd login localhost:30443  ######### localhost nodePort or url
 
